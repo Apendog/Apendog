@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "236705559651",
+    "firebase_url": "https://apendog-9a1b3.firebaseio.com",
+    "project_id": "apendog-9a1b3",
+    "storage_bucket": "apendog-9a1b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:236705559651:android:4191a2d417176f10",
+        "android_client_info": {
+          "package_name": "com.apendog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "236705559651-c4jkgf3ab0vos702ql1l3t0u3acrhs1p.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apendog",
+            "certificate_hash": "65B421603474A151ABAC0249BB4C7BADAB5572C1"
+          }
+        },
+        {
+          "client_id": "236705559651-pqhop2mjsnpjfg3p8vp16c7ggvr4gmoe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuZZ8f9_jEFpTW-U3i5zaalfcmOw_DNTw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "236705559651-pqhop2mjsnpjfg3p8vp16c7ggvr4gmoe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
