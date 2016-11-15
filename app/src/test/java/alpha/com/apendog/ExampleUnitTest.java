@@ -1,4 +1,4 @@
-package com.apendog;
+package alpha.com.apendog;
 
 import org.junit.Test;
 
