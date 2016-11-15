@@ -5,4 +5,9 @@ package com.apendog;
  */
 
 public class dog {
+
+    public void calculateDogFeed() {
+
+        return;
+    }
 }
