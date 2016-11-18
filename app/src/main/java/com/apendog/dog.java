@@ -7,7 +7,7 @@ package com.apendog;
 public class dog {
 
     public void calculateDogFeed() {
-        // is this going to master?
+        // is this going to jayton's bracnch?
 
 
         return;
