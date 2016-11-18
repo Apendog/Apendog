@@ -146,6 +146,8 @@
                 android:textStyle="normal|bold"
                 android:textColor="@android:color/white"
                 android:textAlignment="center"
+                android:paddingTop="30dp"
+                android:paddingBottom="20dp"
                 tools:text="Energy Level" />
 
             <RadioGroup
@@ -153,28 +155,28 @@
                 android:layout_height="match_parent" >
 
                 <RadioButton
-                    android:text="RadioButton"
+                    android:text="Extremely Hyper"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/radioButton5"
                     android:layout_weight="1" />
 
                 <RadioButton
-                    android:text="RadioButton"
+                    android:text="Energetic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/radioButton4"
                     android:layout_weight="1" />
 
                 <RadioButton
-                    android:text="RadioButton"
+                    android:text="Mildly Tempered"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/radioButton3"
                     android:layout_weight="1" />
 
                 <RadioButton
-                    android:text="RadioButton"
+                    android:text="Lazy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/radioButton2"
