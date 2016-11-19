@@ -16,90 +16,107 @@
     tools:context="alpha.com.apendog.MainActivity">
 
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/editText6"
-        android:background="@android:color/white"
-        android:layout_below="@+id/textView6"
-        android:layout_alignStart="@+id/editText3"
-        android:layout_marginTop="15dp"
-        android:textSize="24sp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:layout_marginTop="17dp"
-        android:id="@+id/editText3"
-        android:background="@android:color/white"
-        android:selectAllOnFocus="false"
-        android:singleLine="true"
-        android:textSize="24sp"
-        android:layout_below="@+id/textView5"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:text="Login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button"
-        android:textSize="14sp"
-        android:onClick="gotoLogin"
-        android:layout_marginTop="21dp"
-        android:layout_below="@+id/editText6"
-        android:layout_centerHorizontal="true" />
-
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:srcCompat="@mipmap/agendoglogo"
         android:id="@+id/imageView3"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="36dp"
-        android:layout_above="@+id/textView5" />
-
-    <TextView
-        android:text="AGENDOG"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView2"
-        tools:text="AGENDOG"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textColor="@android:color/white"
-        android:textStyle="normal|bold"
-        android:textSize="36sp"
-        android:textAlignment="center"
-        android:fontFamily="sans-serif"
-        android:layout_marginTop="126dp"
+        android:layout_width="match_parent"
+        android:layout_weight="0.11"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="306dp"
+        android:layout_alignParentBottom="true" />
 
-    <TextView
-        android:text="Username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView5"
-        tools:text="Username"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:layout_below="@+id/textView2"
-        android:layout_alignStart="@+id/button" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:text="Password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:id="@+id/textView6"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="1">
 
-        tools:text="Password"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:layout_below="@+id/editText3"
-        android:layout_alignEnd="@+id/textView5" />
+            <TextView
+                android:text="AGENDOG"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2"
+                tools:text="AGENDOG"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textColor="@android:color/white"
+                android:textStyle="normal|bold"
+                android:textSize="36sp"
+                android:textAlignment="center"
+                android:fontFamily="sans-serif"
+                android:layout_marginTop="126dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:text="Username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView5"
+                tools:text="Username"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_below="@+id/textView2"
+                android:layout_alignStart="@+id/button"
+                android:textAlignment="center" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:ems="10"
+                android:layout_marginTop="17dp"
+                android:id="@+id/editText3"
+                android:background="@android:color/white"
+                android:selectAllOnFocus="false"
+                android:singleLine="true"
+                android:textSize="24sp"
+                android:layout_below="@+id/textView5"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:text="Password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:id="@+id/textView6"
+
+                tools:text="Password"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:layout_below="@+id/editText3"
+                android:layout_alignEnd="@+id/textView5"
+                android:textAlignment="center" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:id="@+id/editText6"
+                android:background="@android:color/white"
+                android:layout_below="@+id/textView6"
+                android:layout_alignStart="@+id/editText3"
+                android:layout_marginTop="15dp"
+                android:textSize="24sp" />
+
+            <Button
+                android:text="Login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/button"
+                android:textSize="14sp"
+                android:onClick="gotoLogin"
+                android:layout_marginTop="21dp"
+                android:layout_below="@+id/editText6"
+                android:layout_centerHorizontal="true" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>
