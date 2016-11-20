@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="#ffb366"
+    android:background="@color/colorPrimary"
     tools:context="alpha.com.apendog.loginActivity">
 
 
@@ -48,7 +48,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/textView3"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:fadeScrollbars="false">
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Apendog</string>
+    <string name="auth_failed">Authentication failed</string>
+    <string name="loading">Loading…</string>
 </resources>
