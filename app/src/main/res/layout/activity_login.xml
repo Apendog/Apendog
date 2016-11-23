@@ -6,13 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@color/colorPrimary"
     tools:context="alpha.com.apendog.loginActivity">
-
-
 
     <TextView
         android:text="D    G"
@@ -49,8 +46,6 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/textView3"
         android:layout_centerHorizontal="true"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:fadeScrollbars="false">
 
@@ -62,13 +57,13 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textPersonName"
+                android:inputType="textCapSentences|textAutoCorrect"
                 android:ems="10"
                 android:id="@+id/editText2"
-                android:background="@android:color/white"
+
                 android:hint="Your dog's name"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
+                android:layout_margin="10dp"
+                />
 
             <TextView
                 android:text="Dog's Age"
@@ -116,7 +111,8 @@
                     android:textAlignment="textStart"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
-                    android:paddingTop="20dp"/>
+                    android:paddingTop="20dp"
+                    android:padding="10dp"/>
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -189,6 +185,14 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:text="Sign Out"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/sign_out_button" />
 
 
 </RelativeLayout>
