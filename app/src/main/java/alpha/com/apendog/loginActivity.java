@@ -1,11 +1,19 @@
 package alpha.com.apendog;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class loginActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
@@ -16,11 +24,45 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
     public SeekBar      weightSeeker    = null;
     public TextView     weightLabel     = null;
     public ImageView    dogPic          = null;
+    private static final String TAG = "Ed-Log";
+    private FirebaseAuth mAuth;
+
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        //Auth creation
+        mAuth = FirebaseAuth.getInstance();
+        //Signout  Button
+//        findViewById(R.id.sign_out_button).setOnClickListener((View.OnClickListener) this);
+//Auth Listener Start
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Intent intent = new Intent(loginActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+                // [START_EXCLUDE]
+//                updateUI(user);
+                // [END_EXCLUDE]
+            }
+
+
+
+        };
+
+
 
         // Getting picker widgets from XML for age and weight pickers
             // number of years or months for age
@@ -92,6 +134,28 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         //set value change listener
         monthYearPicker.setOnValueChangedListener(this);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+    // [END on_start_add_listener]
+
+    // [START on_stop_remove_listener]
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    public void signOut() {
+        mAuth.signOut();
+    }
+
+
 
     // if monthYearPicker value changes. This runs
     public void onValueChange(NumberPicker np2, int oldVal, int newVal) {
