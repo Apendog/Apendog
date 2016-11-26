@@ -7,27 +7,39 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
+import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.IOException;
+
 
 public class loginActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
-
+    dogProfile dogProfile = new dogProfile();
     int weight = 0;
+    int energyLevel = -1;
+    public Button doneButton = null;
     public NumberPicker ageNumberPicker = null;
     public NumberPicker monthYearPicker = null;
     public SeekBar      weightSeeker    = null;
     public TextView     weightLabel     = null;
     public ImageView    dogPic          = null;
+    public EditText     dogName         = null;
+
     private static final String TAG = "Ed-Log";
     private FirebaseAuth mAuth;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +81,8 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         ageNumberPicker = (NumberPicker) findViewById(R.id.numberPicker2);
             // selects months or years
         monthYearPicker = (NumberPicker) findViewById(R.id.numberPicker);
-
+            // set name EditText
+        dogName = (EditText) findViewById(R.id.editText2);
         // seeks weight
         weightSeeker = (SeekBar) findViewById(R.id.seekBar);
 
@@ -135,6 +148,102 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         monthYearPicker.setOnValueChangedListener(this);
     }
 
+    /*****************************************************
+     * ON RADIO BUTTON CLICKED
+     *  sees what energy level user selected
+     *****************************************************/
+    public void onRadioButtonClicked(View view) {
+
+        // Is button checked?
+        boolean checked = ((RadioButton)view).isChecked();
+
+        // Check which radio button was clicked
+        switch (view.getId()) {
+            case R.id.lazyButton:
+                if (checked) {
+                energyLevel = 0;
+                }
+            case R.id.mildlyTemperedButton:
+                if (checked) {
+                    energyLevel = 1;
+                }
+            case R.id.energeticButton:
+                if (checked) {
+                    energyLevel = 2;
+                }
+            case R.id.extremelyHyperButton:
+                if (checked) {
+                    energyLevel = 3;
+                }
+
+        }
+    }
+    public void setDogName() throws IOException {
+        IOException e = new IOException("Dog Name");
+        if (dogName.getText().toString() == null) {
+            throw e;
+        }
+        else {
+            dogProfile.setDogName(dogName.getText().toString());
+        }
+    }
+    public void setDogAge() throws IOException {
+        IOException e = new IOException("Dog Weight");
+        if (ageNumberPicker.getValue() == 0) {
+            throw e;
+        }
+        else {
+            if (monthYearPicker.getValue() == 1) {
+                dogProfile.setDogAge(ageNumberPicker.getValue() * 12);
+            } else {
+                dogProfile.setDogAge(ageNumberPicker.getValue());
+            }
+        }
+    }
+    public void setDogWeight() throws IOException {
+        IOException e = new IOException();
+        if (weightSeeker.getProgress() < 1) {
+            throw e;
+        }
+        else {
+            dogProfile.setDogWeight(weightSeeker.getProgress());
+        }
+    }
+    public void setDogEnergy() throws IOException  {
+        IOException e = new IOException();
+        if(energyLevel > -1) {
+            throw e;
+        }
+        else {
+            dogProfile.setDogEnergy(energyLevel);
+        }
+    }
+    public void doneButtonClick() {
+        // Set name
+        try {
+            setDogName();
+        } catch (IOException e) {
+            Log.d("doneButtonClick-Clicked","Dog Name Missing.");
+        }
+        // Set age
+        try {
+            setDogAge();
+        } catch (IOException e) {
+            Log.d("doneButtonClick-Clicked","Dog Age Not Selected");
+        }
+        // Set weight
+        try {
+            setDogWeight();
+        } catch (IOException e) {
+            Log.d("doneButtonClick-Clicked","Dog Weight Not Set");
+        }
+        // Set energy level
+        try {
+            setDogEnergy();
+        } catch (IOException e) {
+            Log.d("doneButtonClick-Clicked","Dog Energy Not Set");
+        }
+    }
     @Override
     public void onStart() {
         super.onStart();
