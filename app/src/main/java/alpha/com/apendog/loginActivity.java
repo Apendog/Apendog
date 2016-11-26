@@ -1,7 +1,9 @@
 package alpha.com.apendog;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 public class loginActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
@@ -27,12 +30,15 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
     int weight = 0;
     int energyLevel = -1;
     public Button doneButton = null;
-    public NumberPicker ageNumberPicker = null;
-    public NumberPicker monthYearPicker = null;
-    public SeekBar      weightSeeker    = null;
-    public TextView     weightLabel     = null;
-    public ImageView    dogPic          = null;
-    public EditText     dogName         = null;
+    public NumberPicker ageNumberPicker   = null;
+    public NumberPicker monthYearPicker   = null;
+    public SeekBar      weightSeeker      = null;
+    public TextView     weightLabel       = null;
+    public ImageView    dogPic            = null;
+    public EditText     dogName           = null;
+    public EditText     calorieCount      = null;
+    public NumberPicker calorieTypePicker = null;
+    public AlertDialog alertDialog = null;
 
     private static final String TAG = "Ed-Log";
     private FirebaseAuth mAuth;
@@ -74,7 +80,9 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
 
         };
 
-
+/***************************************************************
+ *  hook up the widgets-populate them-sset up listeners
+ ***************************************************************/
 
         // Getting picker widgets from XML for age and weight pickers
             // number of years or months for age
@@ -109,6 +117,8 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         monthYearPicker.setMinValue(0);
         monthYearPicker.setMaxValue(1);
         monthYearPicker.setDisplayedValues(new String[]{"months", "years"});
+        //set value change listener
+        monthYearPicker.setOnValueChangedListener(this);
 
         // to populate the amount of month/years to 0-12 to start
         ageNumberPicker.setMinValue(0);
@@ -143,13 +153,29 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
             }
         });
 
+        calorieCount = (EditText) findViewById(R.id.editText3);
+        calorieTypePicker = (NumberPicker) findViewById(R.id.numberPicker3);
+        calorieTypePicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        calorieTypePicker.setMinValue(0);
+        calorieTypePicker.setMaxValue(1);
+        calorieTypePicker.setDisplayedValues(new String[]{"kcal/kg", "kcal/cup"});
 
-        //set value change listener
-        monthYearPicker.setOnValueChangedListener(this);
+        // an alert box for if form not valid.
+        alertDialog = new AlertDialog.Builder(loginActivity.this).create();
+        alertDialog.setTitle("Form Incomplete");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Got It",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
     }
 
+
     /*****************************************************
-     * ON RADIO BUTTON CLICKED
+     * * ON RADIO BUTTON CLICKED
      *  sees what energy level user selected
      *****************************************************/
     public void onRadioButtonClicked(View view) {
@@ -161,7 +187,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         switch (view.getId()) {
             case R.id.lazyButton:
                 if (checked) {
-                energyLevel = 0;
+                    energyLevel = 0;
                 }
             case R.id.mildlyTemperedButton:
                 if (checked) {
@@ -179,8 +205,8 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         }
     }
     public void setDogName() throws IOException {
-        IOException e = new IOException("Dog Name");
-        if (dogName.getText().toString() == null) {
+        IOException e = new IOException("-Dog Name\n");
+        if (dogName.getText().toString().isEmpty()) {
             throw e;
         }
         else {
@@ -188,7 +214,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         }
     }
     public void setDogAge() throws IOException {
-        IOException e = new IOException("Dog Weight");
+        IOException e = new IOException("-Dog Age\n");
         if (ageNumberPicker.getValue() == 0) {
             throw e;
         }
@@ -201,7 +227,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         }
     }
     public void setDogWeight() throws IOException {
-        IOException e = new IOException();
+        IOException e = new IOException("-Dog Weight\n");
         if (weightSeeker.getProgress() < 1) {
             throw e;
         }
@@ -210,39 +236,112 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         }
     }
     public void setDogEnergy() throws IOException  {
-        IOException e = new IOException();
-        if(energyLevel > -1) {
+        IOException e = new IOException("-Dog Energy\n");
+        if(energyLevel == -1) {
             throw e;
         }
         else {
             dogProfile.setDogEnergy(energyLevel);
         }
     }
-    public void doneButtonClick() {
+    public void setCalorieCount() throws IOException {
+        IOException e = new IOException("-Calorie Count of Food");
+        if (calorieCount.getText().toString().isEmpty()){
+            throw e;
+        }
+        else {
+            double calorieDouble = Integer.parseInt(calorieCount.getText().toString());
+            // if picker is kg -> convert
+            if (calorieTypePicker.getValue() == 0){
+                calorieDouble = calorieDouble * .10520751;
+                int calorieInt = (int) Math.round(calorieDouble);
+                dogProfile.setCalorieCount(calorieInt);
+            }
+            else {
+                dogProfile.setCalorieCount(Integer.parseInt(calorieCount.getText().toString()));
+            }
+        }
+    }
+
+    /*******************************************
+     * Send Dog Data
+     *  send dog data to the database.
+     *  Will run when "Done" button is clicked
+     *  and the form is valid.
+     *******************************************/
+    public void sendDogData() {
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+    public void doneButtonClick(View view) {
+        String errorMessage = " ";
+        boolean formValid = true;
+        Log.d("doneButtonClick-Clicked", "Button was clicked!");
         // Set name
         try {
             setDogName();
         } catch (IOException e) {
-            Log.d("doneButtonClick-Clicked","Dog Name Missing.");
+            Log.d("doneButtonClick-Clicked", "Dog Name Missing.");
+            formValid = false;
+            errorMessage = e.getMessage();
         }
         // Set age
         try {
             setDogAge();
         } catch (IOException e) {
-            Log.d("doneButtonClick-Clicked","Dog Age Not Selected");
+            Log.d("doneButtonClick-Clicked", "Dog Age Not Selected");
+            formValid = false;
+            errorMessage = errorMessage + e.getMessage();
         }
         // Set weight
         try {
             setDogWeight();
         } catch (IOException e) {
-            Log.d("doneButtonClick-Clicked","Dog Weight Not Set");
+            Log.d("doneButtonClick-Clicked", "Dog Weight Not Set");
+            formValid = false;
+            errorMessage = errorMessage + e.getMessage();
         }
         // Set energy level
         try {
             setDogEnergy();
         } catch (IOException e) {
-            Log.d("doneButtonClick-Clicked","Dog Energy Not Set");
+            Log.d("doneButtonClick-Clicked", "Dog Energy Not Set");
+            formValid = false;
+            errorMessage = errorMessage + e.getMessage();
         }
+        // set calorie count
+        try {
+            setCalorieCount();
+        }
+        catch (IOException e){
+            Log.d("doneButtonClick-Clicked", "Calorie Count Not Set");
+            errorMessage = errorMessage + e.getMessage();
+        }
+        if(formValid) {
+            Log.d("Print of Dog Data", "Variables in dogProfile class:");
+            Log.d("Print of Dog Data", "Dog Name: " + dogProfile.getDogName());
+            Log.d("Print of Dog Data", "Dog Age: " + String.valueOf(dogProfile.getDogAge()));
+            Log.d("Print of Dog Data", "Dog Weight: " + String.valueOf(dogProfile.getDogWeight()));
+            Log.d("Print of Dog Data", "Dog Energy: " + String.valueOf(dogProfile.getDogEnergy()));
+            Log.d("Print of Dog Data", "Calorie Count (kcal/cup): " + String.valueOf(dogProfile.getCalorieCount()));
+            sendDogData();
+            startActivity(new Intent(loginActivity.this, dogHub.class));
+        }
+        else {
+            alertDialog.setMessage("Please Fill Out The Following:\n\n" + errorMessage);
+            alertDialog.show();
+        }
+
     }
     @Override
     public void onStart() {

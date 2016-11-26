@@ -12,6 +12,7 @@ public class dogProfile {
     private int dogAge = 0; //in months!
     private int dogWeight = 0;
     private int dogEnergy = 0;
+    private int calorieCount = 0; //kcal/CUP
 
     // --GETTERS--
     public String getDogName() {
@@ -30,6 +31,9 @@ public class dogProfile {
         return dogEnergy;
     }
 
+    public int getCalorieCount(){
+        return calorieCount;
+    }
     // --SETTERS--
     public void setDogName(String dogName) {
         this.dogName = dogName;
@@ -45,5 +49,9 @@ public class dogProfile {
 
     public void setDogEnergy(int dogEnergy) {
         this.dogEnergy = dogEnergy;
+    }
+
+    public void setCalorieCount(int calorieCount) {
+        this.calorieCount = calorieCount;
     }
 }

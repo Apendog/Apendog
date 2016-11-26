@@ -59,10 +59,10 @@
                 android:inputType="textCapSentences|textAutoCorrect"
                 android:ems="10"
                 android:id="@+id/editText2"
-
+                android:background="#ffffff"
                 android:hint="Your dog's name"
                 android:layout_margin="10dp"
-                />
+                android:textAlignment="center" />
 
             <TextView
                 android:text="Dog's Age"
@@ -91,6 +91,43 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/numberPicker"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <TextView
+                android:text="Dog Food Calorie Count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView2"
+                android:textSize="18sp"
+                android:textStyle="normal|bold"
+                android:textColor="@android:color/white"
+                android:textAlignment="center" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:ems="4"
+                    android:maxEms="4"
+                    android:id="@+id/editText3"
+                    android:width="15dp"
+                    android:maxLength="5"
+                    android:layout_weight="1"
+                    android:hint="0000"
+                    android:background="#ffffff"
+                    android:layout_marginTop="80dp"/>
+
+                <NumberPicker
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/numberPicker3"
                     android:layout_weight="1" />
 
             </LinearLayout>
@@ -158,6 +195,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/extremelyHyperButton"
+                    android:onClick="onRadioButtonClicked"
                     android:layout_weight="1" />
 
                 <RadioButton
@@ -165,13 +203,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/energeticButton"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:onClick="onRadioButtonClicked"/>
 
                 <RadioButton
                     android:text="Mildly Tempered"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/mildlyTemperedButton"
+                    android:onClick="onRadioButtonClicked"
                     android:layout_weight="1" />
 
                 <RadioButton
@@ -179,6 +219,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/lazyButton"
+                    android:onClick="onRadioButtonClicked"
                     android:layout_weight="1" />
             </RadioGroup>
 
@@ -186,7 +227,8 @@
                 android:text="Done"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/button2" />
+                android:id="@+id/button2"
+                android:onClick="doneButtonClick"/>
 
         </LinearLayout>
     </ScrollView>
