@@ -31,8 +31,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ProgressDialog progressDialog;
     private TextView mStatusTextView;
     private TextView mDetailTextView;
+    private boolean hasDogProfile;
 
-    private static final String TAG = "EmailPassword";
+    private static final String TAG = "Ed Tag";
 
     //defining firebaseauth object
     private FirebaseAuth firebaseAuth;
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mStatusTextView = (TextView) findViewById(R.id.status);
         mDetailTextView = (TextView) findViewById(R.id.detail);
 
+       // delete this after db pull is working
+        hasDogProfile = false;
 
         //initializing firebase auth object
         firebaseAuth = FirebaseAuth.getInstance();
@@ -75,11 +78,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Intent intent = new Intent(MainActivity.this, loginActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    //If dog profile is built then got to doghub
+
+                    if (!hasDogProfile) {
+                        Intent intent = new Intent(MainActivity.this, loginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    }else{
+                        Intent intent = new Intent(MainActivity.this, dogHub.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+
+                    }
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");

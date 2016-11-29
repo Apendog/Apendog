@@ -16,13 +16,20 @@ import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class loginActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
@@ -42,7 +49,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
 
     private static final String TAG = "Ed-Log";
     private FirebaseAuth mAuth;
-
+    private DatabaseReference mDatabase;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
 
@@ -52,10 +59,16 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         //Auth creation
+
+/***************************************************************
+ *  Getting Auth instance and setting listener.
+ ***************************************************************/
         mAuth = FirebaseAuth.getInstance();
-        //Signout  Button
-//        findViewById(R.id.sign_out_button).setOnClickListener((View.OnClickListener) this);
-//Auth Listener Start
+
+        // Getting Database instance.
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        //Auth Listener Start
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -71,13 +84,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
                     startActivity(intent);
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
-                // [START_EXCLUDE]
-//                updateUI(user);
-                // [END_EXCLUDE]
             }
-
-
-
         };
 
 /***************************************************************
@@ -263,6 +270,10 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         }
     }
 
+    public String getUid() {
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
+
     /*******************************************
      * Send Dog Data
      *  send dog data to the database.
@@ -270,17 +281,54 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
      *  and the form is valid.
      *******************************************/
     public void sendDogData() {
+        Toast.makeText(this, "Sending...", Toast.LENGTH_SHORT).show();
+        final String userId = getUid();
+        final String dogName = dogProfile.getDogName();
+        final int dogAge = dogProfile.getDogAge();
+        final int dogWeight = dogProfile.getDogWeight();
+        final int dogEnergy = dogProfile.getDogEnergy();
+        final int calorieCount = dogProfile.getCalorieCount();
 
 
+        mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get user value
+                        User user = dataSnapshot.getValue(User.class);
 
+                        // [START_EXCLUDE]
+                        if (userId == null) {
+                            // User is null, error out
+                            Log.e(TAG, "User " + userId + " is unexpectedly null");
+                            Toast.makeText(loginActivity.this,
+                                    "Error: could not fetch user.",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Write new post
+                            writeDogProfile(userId, dogName, dogAge, dogWeight, dogEnergy, calorieCount);
+                        }
 
+                        // Finish this Activity, back to the stream
+//                        setEditingEnabled(true);
+                        Toast.makeText(loginActivity.this,
+                                "Success! wrote to the Db.",
+                                Toast.LENGTH_SHORT).show();
+                        finish();
+                        // [END_EXCLUDE]
+                    }
 
-
-
-
-
-
-
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                        // [START_EXCLUDE]
+//                        setEditingEnabled(true);
+                        Toast.makeText(loginActivity.this,
+                                "Error: Db did not write.",
+                                Toast.LENGTH_SHORT).show();
+                        // [END_EXCLUDE]
+                    }
+                });
 
     }
     public void doneButtonClick(View view) {
@@ -343,6 +391,28 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         }
 
     }
+
+    /***************************************************************
+     *  Write to the DB
+     ***************************************************************/
+    private void writeDogProfile(String uid, String dogName, int dogAge, int dogWeight, int dogEnergy, int calorieCount) {
+        // Create new post at /user-posts/$userid/$postid and at
+        // /posts/$postid simultaneously
+        String key = mDatabase.child("dProfile").push().getKey();
+        dogProfile dProfile = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount); //this function needs values passed to it.
+        Map<String, Object> postValues = dProfile.toMap();
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/dProfile/" + key, postValues);
+//        childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
+
+        mDatabase.updateChildren(childUpdates);
+    }
+
+
+    /***************************************************************
+     *  Starting and stoping the Listeners
+     ***************************************************************/
     @Override
     public void onStart() {
         super.onStart();
@@ -362,6 +432,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
     public void signOut() {
         mAuth.signOut();
     }
+
 
 
 
