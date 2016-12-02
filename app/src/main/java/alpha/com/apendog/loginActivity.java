@@ -67,6 +67,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
 
         // Getting Database instance.
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         //Auth Listener Start
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -399,14 +400,15 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
      ***************************************************************/
     private void writeDogProfile(String uid, String dogName, int dogAge, int dogWeight, int dogEnergy, int calorieCount) {
         // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
+        // /posts/$postid simultaneousl
+
         String key = mDatabase.child("dProfile").push().getKey();
         dogProfile dProfile = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount); //this function needs values passed to it.
         Map<String, Object> postValues = dProfile.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/dProfile/" + key, postValues);
-//        childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
+        childUpdates.put(uid + "/pets/" + "pet1", key);
 
         mDatabase.updateChildren(childUpdates);
     }

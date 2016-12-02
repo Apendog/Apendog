@@ -56,10 +56,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDetailTextView = (TextView) findViewById(R.id.detail);
 
        // delete this after db pull is working
-        hasDogProfile = false;
+        hasDogProfile = getDogProfile();
 
         //initializing firebase auth object
         firebaseAuth = FirebaseAuth.getInstance();
+
 
 
         buttonSignup = (Button) findViewById(R.id.buttonSignup);
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    //If dog profile is built then got to doghub
+                    //If dog profile is built then go to doghub
 
                     if (!hasDogProfile) {
                         Intent intent = new Intent(MainActivity.this, loginActivity.class);
@@ -105,6 +106,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // [END auth_state_listener]
     }
 //end OnCreate
+
+    public boolean getDogProfile() {
+        boolean value = true;
+
+
+        return value;
+    }
 
     @Override
     public void onStart() {
