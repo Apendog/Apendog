@@ -33,7 +33,7 @@ import java.util.Map;
 
 
 public class loginActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
-    dogProfile dogProfile = new dogProfile();
+    public dogProfile dogProfile = new dogProfile();
     int weight = 0;
     int energyLevel = -1;
     public Button doneButton = null;
@@ -383,7 +383,9 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
             Log.d("Print of Dog Data", "Dog Energy: " + String.valueOf(dogProfile.getDogEnergy()));
             Log.d("Print of Dog Data", "Calorie Count (kcal/cup): " + String.valueOf(dogProfile.getCalorieCount()));
             sendDogData();
-            startActivity(new Intent(loginActivity.this, dogHub.class));
+            Intent i = new Intent(loginActivity.this, dogHub.class);
+            i.putExtra("dogProfile", dogProfile);
+            startActivity(i);
         }
         else {
             alertDialog.setMessage("Please Fill Out The Following:\n\n" + errorMessage);
