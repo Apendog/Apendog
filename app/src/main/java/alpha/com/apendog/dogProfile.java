@@ -3,6 +3,7 @@ package alpha.com.apendog;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 /******************************************
@@ -12,7 +13,8 @@ import java.util.Map;
  *    variables. Has getters/setters
  */
 @IgnoreExtraProperties
-public class dogProfile {
+@SuppressWarnings("serial")
+public class dogProfile implements Serializable{
     private String uid = null;
     private String dogName = null;
     private int dogAge = 0; //in months!

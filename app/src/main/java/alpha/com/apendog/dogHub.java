@@ -6,11 +6,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import java.io.Serializable;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class dogHub extends AppCompatActivity {
+
+
+    public TextView dogName;
+    public dogProfile myDogProfile;
+
 
     private FirebaseAuth mAuth;
     private static final String TAG = "Ed-Log";
@@ -21,6 +29,11 @@ public class dogHub extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_hub);
+
+        // put name from profile on hub
+        dogName = (TextView) findViewById(R.id.dogNameView);
+        myDogProfile = (dogProfile)getIntent().getSerializableExtra("dogProfile");
+        dogName.setText(myDogProfile.getDogName());
 
         mAuth = FirebaseAuth.getInstance();
 
