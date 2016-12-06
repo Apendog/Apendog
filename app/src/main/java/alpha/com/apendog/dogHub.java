@@ -9,9 +9,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class dogHub extends AppCompatActivity {
 
@@ -21,6 +25,7 @@ public class dogHub extends AppCompatActivity {
 
 
     private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
     private static final String TAG = "Ed-Log";
 
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -30,6 +35,8 @@ public class dogHub extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_hub);
 
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         // put name from profile on hub
         dogName = (TextView) findViewById(R.id.dogNameView);
         myDogProfile = (dogProfile)getIntent().getSerializableExtra("dogProfile");
@@ -59,12 +66,15 @@ public class dogHub extends AppCompatActivity {
         };
     }
 
+
+
     @Override
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
     }
     // [END on_start_add_listener]
+
 
     // [START on_stop_remove_listener]
     @Override
@@ -76,6 +86,21 @@ public class dogHub extends AppCompatActivity {
 //        hideProgressDialog();
     }
     // [END on_stop_remove_listener]
+
+
+    /***************************************************************
+     *  Write to the DB. Call this to write to Firebase
+     ***************************************************************/
+    private void writeBaseActivity(String petUid, String userUid, String time, int duration, String activityType) {
+        BaseActivity mActivity = new BaseActivity(petUid, userUid, time, duration, activityType); //this function needs values passed to it.
+        Map<String, Object> postValues = mActivity.toMap();
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/Activities/", postValues);
+        mDatabase.updateChildren(childUpdates);
+    }
+
+
 
     public void signOut() {
         mAuth.signOut();

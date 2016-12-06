@@ -67,7 +67,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
 
         // Getting Database instance.
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         //Auth Listener Start
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -296,7 +296,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // Get user value
-                        User user = dataSnapshot.getValue(User.class);
+//                        User user = dataSnapshot.getValue(User.class);
 
                         // [START_EXCLUDE]
                         if (userId == null) {
@@ -313,7 +313,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
                         // Finish this Activity, back to the stream
 //                        setEditingEnabled(true);
                         Toast.makeText(loginActivity.this,
-                                "Success! wrote to the Db.",
+                                "Success! Created a new dog profile.",
                                 Toast.LENGTH_SHORT).show();
                         finish();
                         // [END_EXCLUDE]
@@ -325,7 +325,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
                         // [START_EXCLUDE]
 //                        setEditingEnabled(true);
                         Toast.makeText(loginActivity.this,
-                                "Error: Db did not write.",
+                                "Error: Dog profile was not created.",
                                 Toast.LENGTH_SHORT).show();
                         // [END_EXCLUDE]
                     }
@@ -403,12 +403,13 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         // /posts/$postid simultaneousl
 
         String key = mDatabase.child("dProfile").push().getKey();
+//        int pCount = mDatabase.child("dProfile/" + uid + "/petCount");
         dogProfile dProfile = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount); //this function needs values passed to it.
         Map<String, Object> postValues = dProfile.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/dProfile/" + key, postValues);
-        childUpdates.put(uid + "/pets/" + "pet1", key);
+        childUpdates.put("oProfile/" + uid + "/pets/" + "pet1", key);
 
         mDatabase.updateChildren(childUpdates);
     }

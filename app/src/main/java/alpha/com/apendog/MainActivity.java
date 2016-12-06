@@ -18,6 +18,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -37,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //defining firebaseauth object
     private FirebaseAuth firebaseAuth;
+    private DatabaseReference mDatabase;
     // [START declare_auth_listener]
     private FirebaseAuth.AuthStateListener mAuthListener;
     // [END declare_auth_listener]
@@ -48,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         //initializing views
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
@@ -80,8 +86,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (user != null) {
                     // User is signed in
                     //If dog profile is built then go to doghub
+                    String userName = null;
+                    String userEmail = editTextEmail.getText().toString();
+                    boolean hasPetProfile = false;
 
                     if (!hasDogProfile) {
+                        writeUserProfile( userName, userEmail, hasPetProfile, getUid() );
                         Intent intent = new Intent(MainActivity.this, loginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -108,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //end OnCreate
 
     public boolean getDogProfile() {
-        boolean value = true;
+        boolean value = false;
 
 
         return value;
@@ -156,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
 
                         // [START_EXCLUDE]
+
                         hideProgressDialog();
                         // [END_EXCLUDE]
                     }
@@ -260,6 +271,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public String getUid() {
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
 
     public ProgressDialog mProgressDialog;
 
@@ -279,6 +293,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /***************************************************************
+     *  Write to the DB
+     ***************************************************************/
+    private void writeUserProfile(String username, String email, boolean hasPetProfile, String uid) {
+        // Create new post at /user-posts/$userid/$postid and at
+        // /posts/$postid simultaneousl
+
+//        String key = mDatabase.child("dProfile").push().getKey();
+//        int pCount = mDatabase.child("dProfile/" + uid + "/petCount");
+        UserProfile uProfile = new UserProfile(username, email, hasPetProfile); //this function needs values passed to it.
+        Map<String, Object> postValues = uProfile.toMap();
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/oProfile/" + uid, postValues);
+
+
+        mDatabase.updateChildren(childUpdates);
+    }
 
 
 

@@ -12,7 +12,7 @@ import java.util.Map;
 
 // [START blog_user_class]
 @IgnoreExtraProperties
-public class UserPorfile {
+public class UserProfile {
 
     private String username = null;
     private String email = null;
