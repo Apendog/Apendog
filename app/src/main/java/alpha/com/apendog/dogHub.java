@@ -8,20 +8,28 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class dogHub extends AppCompatActivity {
 
 
     public TextView dogName;
     public dogProfile myDogProfile;
+// need to check the spellings on this
+    private DatabaseReference mActivityReference;
+    private ValueEventListener mActivityListener;
 
 
     private FirebaseAuth mAuth;
@@ -35,6 +43,9 @@ public class dogHub extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_hub);
 
+        // Initialize Database
+        mActivityReference = FirebaseDatabase.getInstance().getReference()
+                .child("Activities").child(mPostKey);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // put name from profile on hub
@@ -72,6 +83,34 @@ public class dogHub extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+
+        // [START basicActivity_listener]
+        ValueEventListener baseActivityListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                BaseActivity baseActivity = dataSnapshot.getValue(BaseActivity.class);
+                // [START_EXCLUDE]
+                mAuthorView.setText(post.author);
+                mTitleView.setText(post.title);
+                mBodyView.setText(post.body);
+                // [END_EXCLUDE]
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // [START_EXCLUDE]
+                Toast.makeText(dogHub.this, "Failed to load post.",
+                        Toast.LENGTH_SHORT).show();
+                // [END_EXCLUDE]
+            }
+        };
+        mActivityReference.addValueEventListener(activityListener);
+        // [END post_value_event_listener]
+
+        mActivityListener = activityListener;
     }
     // [END on_start_add_listener]
 
