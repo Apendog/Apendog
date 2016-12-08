@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -181,6 +182,105 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
 
     }
 
+    /****************************************************
+     * CALCULATE BUSINESS ONE
+     *  this calculates how long the dog can hold bladder.
+     *  Needs to know dogAge so make sure dogAge is set
+     *  before this is executed
+     ***************************************************/
+    public void calcBusinessOne() {
+        // if dog is less than eight months then it can hold
+        //  its bladder an hour for each month alive.
+        if (dogProfile.getDogAge() < 8) {
+            dogProfile.setPeeHours(dogProfile.getDogAge());
+        }
+        // if older than 8 months then 8 hours is average dog bladder hold time
+        else {
+            dogProfile.setPeeHours(8);
+        }
+        dogProfile.setLastPeed(new Date());
+    }
+    /*************************************
+     * CALCULATE BUSINESS TWO
+     *  This calculates how long dog can hold poo.
+     *  Needs to know dogAge so make sure dogAge is set
+     *  before this is executed.
+     *************************************/
+    public void calBusinessTwo() {
+        dogProfile.setPooHours(24);
+        dogProfile.setLastPooed(new Date());
+    }
+    /*************************************
+     * CALCULATE FEED
+     *  Calculates how many calories the dog should eat each meal
+     *************************************/
+    public void calFeed() {
+        int weight;
+        double dailyCal;
+        double multiplier;
+        int mealCal;
+        if (dogProfile.getDogAge() <= 4) {
+            multiplier = 3;
+        }
+        else if (dogProfile.getDogAge() > 4 && dogProfile.getDogAge() < 9) {
+            multiplier = 2;
+        }
+        else {
+            multiplier = 1;
+        }
+
+        weight = dogProfile.getDogWeight();
+        dailyCal =  weight / 2.2;
+        double j = Math.pow(dailyCal, 0.750);
+        dailyCal = 70 * j;
+        dailyCal = dailyCal * multiplier;
+        mealCal = (int) Math.round(dailyCal / 2);
+        dogProfile.setCalPerMeal(mealCal);
+        boolean mMeals[] = new boolean[1];
+        for (int i = 0; i < mMeals.length; i++) {
+            mMeals[i] = false;
+        }
+        dogProfile.setMeals(mMeals);
+    }
+    /*************************************
+     * CALCULATE EXERCISE
+     *  calculates how long the walks need to be and how many
+     *************************************/
+    public void calExercise() {
+        int energyLevel = dogProfile.getDogEnergy();
+        switch (energyLevel) {
+            case 0:
+                dogProfile.setWalkCount(1);
+                dogProfile.setWalkDuration(15);
+                break;
+            case 1:
+                dogProfile.setWalkCount(1);
+                dogProfile.setWalkDuration(20);
+                break;
+            case 2:
+                dogProfile.setWalkCount(2);
+                dogProfile.setWalkDuration(15);
+                break;
+            case 3:
+                dogProfile.setWalkCount(2);
+                dogProfile.setWalkDuration(30);
+        }
+        boolean mWalks[] = new boolean[dogProfile.getWalkCount()];
+        for (int i = 0; i < mWalks.length; i++) {
+            mWalks[i] = false;
+        }
+        dogProfile.setWalks(mWalks);
+    }
+    /****************************************
+     * DO CALCULATIONS
+     *  executes methods that calculate dog data
+     ****************************************/
+    public void doCalculations() {
+        calcBusinessOne();
+        calBusinessTwo();
+        calFeed();
+        calExercise();
+    }
 
     /*****************************************************
      * * ON RADIO BUTTON CLICKED
@@ -332,6 +432,12 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
                 });
 
     }
+
+    /**********************************
+     * DONE BUTTON CLICK
+     *  this is executed when button is clicked
+     *  and sets the variables of dogProfile.
+     *********************************/
     public void doneButtonClick(View view) {
         String errorMessage = " ";
         boolean formValid = true;
@@ -376,6 +482,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
             Log.d("doneButtonClick-Clicked", "Calorie Count Not Set");
             errorMessage = errorMessage + e.getMessage();
         }
+        doCalculations();
         if(formValid) {
             Log.d("Print of Dog Data", "Variables in dogProfile class:");
             Log.d("Print of Dog Data", "Dog Name: " + dogProfile.getDogName());
@@ -383,6 +490,14 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
             Log.d("Print of Dog Data", "Dog Weight: " + String.valueOf(dogProfile.getDogWeight()));
             Log.d("Print of Dog Data", "Dog Energy: " + String.valueOf(dogProfile.getDogEnergy()));
             Log.d("Print of Dog Data", "Calorie Count (kcal/cup): " + String.valueOf(dogProfile.getCalorieCount()));
+            Log.d("Print of Dog Data", "Pee Hours: " + String.valueOf(dogProfile.getPeeHours()));
+            Log.d("Print of Dog Data", "Poo Hours: " + String.valueOf(dogProfile.getPooHours()));
+            Log.d("Print of Dog Data", "Calories Per Meal: " + String.valueOf(dogProfile.getCalPerMeal()));
+            Log.d("Print of Dog Data", "Individual Walk Duration: " + String.valueOf(dogProfile.getWalkDuration()));
+            Log.d("Print of Dog Data", "Amount of Walks Needed: " + String.valueOf(dogProfile.getWalkCount()));
+            Log.d("Print of Dog Data", "Last Peed: " + dogProfile.getLastPeed().toString());
+            Log.d("Print of Dog Data", "Last Pooed: " + dogProfile.getLastPooed().toString());
+
             sendDogData();
             Intent i = new Intent(loginActivity.this, dogHub.class);
             i.putExtra("dogProfile", dogProfile);

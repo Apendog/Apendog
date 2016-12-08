@@ -4,6 +4,7 @@ import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 /******************************************
@@ -17,10 +18,21 @@ import java.util.Map;
 public class dogProfile implements Serializable{
     public String uid = null;
     public String dogName = null;
-    public int dogAge = 0; //in months!
-    public int dogWeight = 0;
-    public int dogEnergy = 0;
-    public int calorieCount = 0; //kcal/CUP
+    private int dogAge = 0;       //in months!
+    private int dogWeight = 0;    //in pounds
+    private int dogEnergy = 0;    //how energetic dog is
+    private int calorieCount = 0; //kcal/CUP
+    private int peeHours = 0;     //how long the dog can hold pee
+    private int pooHours = 0;     //how long the dog can hold poo
+    private int calPerMeal = 0;   //amount of cal per meal
+    private int walkDuration = 0; //how long the individual walks must be
+    private int walkCount = 0;    //how many walks per day
+    private Date lastPeed;        //last time the dog peed
+    private Date lastPooed;       //last time the dog took a dookie
+    private boolean walks[];      //walks;
+    private boolean meals[];     //the dog's two meals
+
+
 
 
     public dogProfile() {
@@ -69,6 +81,25 @@ public class dogProfile implements Serializable{
     public int getCalorieCount(){
         return calorieCount;
     }
+
+    public int getPeeHours() {return peeHours;}
+
+    public int getPooHours() {return pooHours;}
+
+    public int getCalPerMeal() {return calPerMeal;}
+
+    public int getWalkDuration() {return walkDuration;}
+
+    public int getWalkCount() {return walkCount;}
+
+    public Date getLastPeed() {return lastPeed;}
+
+    public Date getLastPooed() {return lastPooed;}
+
+    public boolean[] getWalks() {return walks;}
+
+    public boolean[] getMeals() {return meals;}
+
     // --SETTERS--
     public void setDogName(String dogName) {
         this.dogName = dogName;
@@ -89,4 +120,23 @@ public class dogProfile implements Serializable{
     public void setCalorieCount(int calorieCount) {
         this.calorieCount = calorieCount;
     }
+
+    public void setPeeHours(int peeHours) {this.peeHours = peeHours;}
+
+    public void setPooHours(int pooHours) {this.pooHours = pooHours;}
+
+    public void setCalPerMeal(int calPerMeal) {this.calPerMeal = calPerMeal;}
+
+    public void setWalkDuration(int walkDuration) {this.walkDuration = walkDuration;}
+
+    public void setWalkCount(int walkCount) {this.walkCount = walkCount;}
+
+    public void setLastPeed(Date lastPeed) {this.lastPeed = lastPeed;}
+
+    public void setLastPooed(Date lastPooed) {this.lastPooed = lastPooed;}
+
+    public void setWalks(boolean walks[]) {this.walks = walks;}
+
+    public void setMeals(boolean meals[]) {this.meals = meals;}
+
 }
