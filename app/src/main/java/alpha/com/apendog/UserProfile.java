@@ -14,19 +14,21 @@ import java.util.Map;
 @IgnoreExtraProperties
 public class UserProfile {
 
-    private String username = null;
-    private String email = null;
-    private boolean hasPetProfile = false;
+    public String username = null;
+    public String email = null;
+    public boolean hasPetProfile = false;
+    public String petUid = null;
 
 
     public UserProfile() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public UserProfile(String username, String email, boolean hasPetProfile) {
+    public UserProfile(String username, String email, boolean hasPetProfile, String petUid) {
         this.username = username;
         this.email = email;
         this.hasPetProfile = hasPetProfile;
+        this.petUid = petUid;
     }
 
     @Exclude
@@ -35,6 +37,7 @@ public class UserProfile {
         result.put("username", username);
         result.put("email", email);
         result.put("hasPetProfile", hasPetProfile);
+        result.put("petUid", petUid);
 
         return result;
     }

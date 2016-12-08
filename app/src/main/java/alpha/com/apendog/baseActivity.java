@@ -12,11 +12,11 @@ import java.util.Map;
 
 public class BaseActivity {
 
-    private String petUid = null;
-    private String userUid = null;
-    private String time = null;
-    private int duration = 0;
-    private String activityType = null;
+    public String petUid = null;
+    public String userUid = null;
+    public String time = null;
+    public int duration = 0;
+    public String activityType = null;
 
 
     public BaseActivity() {

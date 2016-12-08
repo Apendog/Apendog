@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView mStatusTextView;
     private TextView mDetailTextView;
     private boolean hasDogProfile;
+    private String petUid;
 
     private static final String TAG = "Ed Tag";
 
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     boolean hasPetProfile = false;
 
                     if (!hasDogProfile) {
-                        writeUserProfile( userName, userEmail, hasPetProfile, getUid() );
+                        writeUserProfile( userName, userEmail, hasPetProfile, petUid, getUid() );
                         Intent intent = new Intent(MainActivity.this, loginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -296,13 +297,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /***************************************************************
      *  Write to the DB
      ***************************************************************/
-    private void writeUserProfile(String username, String email, boolean hasPetProfile, String uid) {
+    private void writeUserProfile(String username, String email, boolean hasPetProfile, String petUid, String uid) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneousl
 
 //        String key = mDatabase.child("dProfile").push().getKey();
 //        int pCount = mDatabase.child("dProfile/" + uid + "/petCount");
-        UserProfile uProfile = new UserProfile(username, email, hasPetProfile); //this function needs values passed to it.
+        UserProfile uProfile = new UserProfile(username, email, hasPetProfile, petUid); //this function needs values passed to it.
         Map<String, Object> postValues = uProfile.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();

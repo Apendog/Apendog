@@ -15,12 +15,12 @@ import java.util.Map;
 @IgnoreExtraProperties
 @SuppressWarnings("serial")
 public class dogProfile implements Serializable{
-    private String uid = null;
-    private String dogName = null;
-    private int dogAge = 0; //in months!
-    private int dogWeight = 0;
-    private int dogEnergy = 0;
-    private int calorieCount = 0; //kcal/CUP
+    public String uid = null;
+    public String dogName = null;
+    public int dogAge = 0; //in months!
+    public int dogWeight = 0;
+    public int dogEnergy = 0;
+    public int calorieCount = 0; //kcal/CUP
 
 
     public dogProfile() {

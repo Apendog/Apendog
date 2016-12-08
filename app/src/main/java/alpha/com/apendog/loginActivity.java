@@ -409,7 +409,8 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/dProfile/" + key, postValues);
-        childUpdates.put("oProfile/" + uid + "/pets/" + "pet1", key);
+        childUpdates.put("/oProfile/" + uid + "/pet/", key);
+        childUpdates.put("/oProfile/" + uid + "/hasPetProfile/", true);
 
         mDatabase.updateChildren(childUpdates);
     }

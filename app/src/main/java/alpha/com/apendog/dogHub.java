@@ -22,10 +22,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import alpha.com.apendog.BaseActivity;
+
 public class dogHub extends AppCompatActivity {
 
 
     public TextView dogName;
+
+    private TextView mAuthorView;
+    private TextView mUserUid;
+    private TextView mBodyView;
+
+    private String mActivityKey;
     public dogProfile myDogProfile;
 // need to check the spellings on this
     private DatabaseReference mActivityReference;
@@ -35,6 +43,7 @@ public class dogHub extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private static final String TAG = "Ed-Log";
+    private static String uid;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -42,16 +51,22 @@ public class dogHub extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_hub);
-
+        mActivityKey = "testActivity";
         // Initialize Database
         mActivityReference = FirebaseDatabase.getInstance().getReference()
-                .child("Activities").child(mPostKey);
+                .child("Activities").child(mActivityKey);;
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // put name from profile on hub
         dogName = (TextView) findViewById(R.id.dogNameView);
+        mAuthorView = (TextView) findViewById(R.id.petUidView);
+        mUserUid = (TextView) findViewById(R.id.userUidView);
+//        mBodyView = (TextView) findViewById(R.id.durationView);
+
+        getDogProfile();
+
         myDogProfile = (dogProfile)getIntent().getSerializableExtra("dogProfile");
-        dogName.setText(myDogProfile.getDogName());
+//        dogName.setText(myDogProfile.getDogName());
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -61,6 +76,7 @@ public class dogHub extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
+                    uid = user.getUid();
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
@@ -90,10 +106,12 @@ public class dogHub extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
                 BaseActivity baseActivity = dataSnapshot.getValue(BaseActivity.class);
+                dogProfile dProfile = dataSnapshot.getValue(dogProfile.class);
                 // [START_EXCLUDE]
-                mAuthorView.setText(post.author);
-                mTitleView.setText(post.title);
-                mBodyView.setText(post.body);
+                dogName.setText(dProfile.dogName);
+                mAuthorView.setText(baseActivity.petUid);
+                mUserUid.setText(baseActivity.userUid);
+//                mBodyView.setText(baseActivity.duration);
                 // [END_EXCLUDE]
             }
 
@@ -107,10 +125,10 @@ public class dogHub extends AppCompatActivity {
                 // [END_EXCLUDE]
             }
         };
-        mActivityReference.addValueEventListener(activityListener);
+        mActivityReference.addValueEventListener(baseActivityListener);
         // [END post_value_event_listener]
 
-        mActivityListener = activityListener;
+        mActivityListener = baseActivityListener;
     }
     // [END on_start_add_listener]
 
@@ -138,6 +156,61 @@ public class dogHub extends AppCompatActivity {
         childUpdates.put("/Activities/", postValues);
         mDatabase.updateChildren(childUpdates);
     }
+
+    /*******
+     * This is to get the dog profile one time
+     */
+    private void getDogProfile() {
+
+
+
+
+        FirebaseDatabase.getInstance().getReference().child("dProfile").child("-KY5exo6b85U8aTlMx6r")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get user information
+                        dogProfile dProfile = dataSnapshot.getValue(dogProfile.class);
+
+                        String uid = dProfile.uid;
+                        String dogName = dProfile.dogName;
+                        int dogAge = dProfile.dogAge;
+                        int dogWeight = dProfile.dogWeight;
+                        int dogEnergy = dProfile.dogEnergy;
+                        int calorieCount = dProfile.calorieCount;
+
+                       dogProfile dProfile1 = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount);
+                        Log.d(TAG, "getDogProfile " + uid + " dogName: " + dogName + " dogWeight: " + dogWeight + " dogEnergy: " + dogEnergy + " cc: " + calorieCount);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    private void getUserProfile() {
+
+        FirebaseDatabase.getInstance().getReference().child("oProfile").child(uid)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get user information
+                        UserProfile user = dataSnapshot.getValue(UserProfile.class);
+                        String userName = user.username;
+                        String email = user.email;
+                        boolean hasPetProfile = user.hasPetProfile;
+                        String petUid = user.petUid;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
 
 
 

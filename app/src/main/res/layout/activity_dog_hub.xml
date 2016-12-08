@@ -26,27 +26,66 @@
             android:onClick="signoutButtonClick" />
 
         <TextView
-            android:text="dogName"
+            android:text="userUid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:id="@+id/dogNameView"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
+            android:id="@+id/userUidView"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textStyle="normal|bold"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:layout_below="@+id/dogNameView"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="11dp" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/dogNameView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp">
+            android:layout_height="146dp"
+            android:layout_marginTop="147dp"
+            android:layout_below="@+id/userUidView"
+            android:layout_alignParentStart="true">
+
+            <TextView
+                android:text="duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/durationView"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textStyle="normal|bold"
+                android:textSize="30sp"
+                android:layout_weight="1" />
 
         </LinearLayout>
+
+        <TextView
+            android:text="dogName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dogNameView"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textStyle="normal|bold"
+            android:textSize="30sp"
+            android:layout_weight="1"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="19dp" />
+
+        <TextView
+            android:text="petUId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/petUidView"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textStyle="normal|bold"
+            android:textSize="30sp"
+            android:layout_weight="1"
+            android:layout_above="@+id/button3"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="29dp" />
+
 
     </RelativeLayout>
 
