@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,9 +28,17 @@ import alpha.com.apendog.BaseActivity;
 
 public class dogHub extends AppCompatActivity {
 
-
+    public TextView peeTicker;
+    public TextView pooTicker;
+    public Button peeDoneButton;
+    public Button pooDoneButton;
+    public CheckBox walkCheck0;
+    public CheckBox walkCheck1;
+    public Button  walkedDoneButton;
+    public CheckBox mealCheck0;
+    public CheckBox mealCheck1;
+    public Button mealDoneButton;
     public TextView dogName;
-
     private TextView mAuthorView;
     private TextView mUserUid;
     private TextView mBodyView;
@@ -59,14 +69,33 @@ public class dogHub extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // put name from profile on hub
         dogName = (TextView) findViewById(R.id.dogNameView);
-        mAuthorView = (TextView) findViewById(R.id.petUidView);
-        mUserUid = (TextView) findViewById(R.id.userUidView);
+//        mAuthorView = (TextView) findViewById(R.id.petUidView);
+//        mUserUid = (TextView) findViewById(R.id.userUidView);
 //        mBodyView = (TextView) findViewById(R.id.durationView);
+        peeTicker = (TextView) findViewById(R.id.peeTicker);
+        pooTicker = (TextView) findViewById(R.id.pooTicker);
+        peeDoneButton = (Button) findViewById(R.id.peeDoneButton);
+        pooDoneButton = (Button) findViewById(R.id.pooDoneButton);
+        walkCheck0 = (CheckBox) findViewById(R.id.walkCheck0);
+        walkCheck1 = (CheckBox) findViewById(R.id.walkCheck1);
+        walkedDoneButton = (Button) findViewById(R.id.walkedDoneButton);
+        mealCheck0 = (CheckBox) findViewById(R.id.mealCheck0);
+        mealCheck1 = (CheckBox) findViewById(R.id.mealCheck1);
+        mealDoneButton = (Button) findViewById(R.id.mealDoneButton);
 
         getDogProfile();
 
         myDogProfile = (dogProfile)getIntent().getSerializableExtra("dogProfile");
-//        dogName.setText(myDogProfile.getDogName());
+        dogName.setText("Let " + myDogProfile.getDogName() + " go...");
+        peeDoneButton.setText(myDogProfile.getDogName() + " peed!");
+        pooDoneButton.setText(myDogProfile.getDogName() + " pooed!");
+        walkCheck0.setText("Walked for " + String.valueOf(myDogProfile.getWalkDuration()) + " minutes");
+        walkCheck1.setText("Walked for " + String.valueOf(myDogProfile.getWalkDuration()) + " minutes");
+        walkedDoneButton.setText("I walked " + myDogProfile.getDogName() + "!");
+        mealCheck0.setText("Fed " + String.valueOf(myDogProfile.getCalPerMeal()) + " k/cal of food");
+        mealCheck1.setText("Fed " + String.valueOf(myDogProfile.getCalPerMeal()) + " k/cal of food");
+        mealDoneButton.setText("I fed " + myDogProfile.getDogName() + "!");
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -108,9 +137,9 @@ public class dogHub extends AppCompatActivity {
                 BaseActivity baseActivity = dataSnapshot.getValue(BaseActivity.class);
                 dogProfile dProfile = dataSnapshot.getValue(dogProfile.class);
                 // [START_EXCLUDE]
-                dogName.setText(dProfile.dogName);
-                mAuthorView.setText(baseActivity.petUid);
-                mUserUid.setText(baseActivity.userUid);
+         //       dogName.setText(dProfile.dogName);
+//                mAuthorView.setText(baseActivity.petUid);
+//                mUserUid.setText(baseActivity.userUid);
 //                mBodyView.setText(baseActivity.duration);
                 // [END_EXCLUDE]
             }
@@ -174,10 +203,10 @@ public class dogHub extends AppCompatActivity {
 
                         String uid = dProfile.uid;
                         String dogName = dProfile.dogName;
-                        int dogAge = dProfile.dogAge;
-                        int dogWeight = dProfile.dogWeight;
-                        int dogEnergy = dProfile.dogEnergy;
-                        int calorieCount = dProfile.calorieCount;
+                        int dogAge = dProfile.getDogAge();
+                        int dogWeight = dProfile.getDogWeight();
+                        int dogEnergy = dProfile.getDogEnergy();
+                        int calorieCount = dProfile.getCalorieCount();
 
                        dogProfile dProfile1 = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount);
                         Log.d(TAG, "getDogProfile " + uid + " dogName: " + dogName + " dogWeight: " + dogWeight + " dogEnergy: " + dogEnergy + " cc: " + calorieCount);
