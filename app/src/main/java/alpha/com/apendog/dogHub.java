@@ -48,8 +48,9 @@ public class dogHub extends AppCompatActivity {
 // need to check the spellings on this
     private DatabaseReference mActivityReference;
     private ValueEventListener mActivityListener;
+    dogProfile dProfile1 = null;
 
-
+    String rDogName = dProfile1.dogName;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private static final String TAG = "Ed-Log";
@@ -190,17 +191,12 @@ public class dogHub extends AppCompatActivity {
      * This is to get the dog profile one time
      */
     private void getDogProfile() {
-
-
-
-
         FirebaseDatabase.getInstance().getReference().child("dProfile").child("-KY5exo6b85U8aTlMx6r")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // Get user information
                         dogProfile dProfile = dataSnapshot.getValue(dogProfile.class);
-
                         String uid = dProfile.uid;
                         String dogName = dProfile.dogName;
                         int dogAge = dProfile.getDogAge();
@@ -208,7 +204,7 @@ public class dogHub extends AppCompatActivity {
                         int dogEnergy = dProfile.getDogEnergy();
                         int calorieCount = dProfile.getCalorieCount();
 
-                       dogProfile dProfile1 = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount);
+                        dProfile1 = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount);
                         Log.d(TAG, "getDogProfile " + uid + " dogName: " + dogName + " dogWeight: " + dogWeight + " dogEnergy: " + dogEnergy + " cc: " + calorieCount);
                     }
 

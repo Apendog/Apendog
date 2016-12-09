@@ -26,7 +26,8 @@
         <activity
             android:name=".loginActivity"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name=".dogHub"></activity>
+        <activity android:name=".dogHub" />
+        <activity android:name=".AddPet"></activity>
     </application>
 
 </manifest>

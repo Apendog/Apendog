@@ -29,14 +29,14 @@ public class dogProfile implements Serializable{
     private int walkCount = 0;    //how many walks per day
     private Date lastPeed;        //last time the dog peed
     private Date lastPooed;       //last time the dog took a dookie
-    private boolean walks[];      //walks;
-    private boolean meals[];     //the dog's two meals
+    private boolean walks = false;      //walks;
+    private boolean meals = false;     //the dog's two meals
 
 
 
 
     public dogProfile() {
-        // Default constructor required for calls to DataSnapshot.getValue(Post.class)
+        // Default constructor required for calls to DataSnapshot.getValue(dogProfile.class)
     }
 
     public dogProfile(String uid, String dogName, int dogAge, int dogWeight, int dogEnergy, int calorieCount) {
@@ -96,9 +96,9 @@ public class dogProfile implements Serializable{
 
     public Date getLastPooed() {return lastPooed;}
 
-    public boolean[] getWalks() {return walks;}
-
-    public boolean[] getMeals() {return meals;}
+//    public boolean[] getWalks() {return walks;}
+//
+//    public boolean[] getMeals() {return meals;}
 
     // --SETTERS--
     public void setDogName(String dogName) {
@@ -135,8 +135,8 @@ public class dogProfile implements Serializable{
 
     public void setLastPooed(Date lastPooed) {this.lastPooed = lastPooed;}
 
-    public void setWalks(boolean walks[]) {this.walks = walks;}
-
-    public void setMeals(boolean meals[]) {this.meals = meals;}
+//    public void setWalks(boolean walks[]) {this.walks = walks;}
+//
+//    public void setMeals(boolean meals[]) {this.meals = meals;}
 
 }

@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * Created by user on 12/5/2016.
  */
-
+@IgnoreExtraProperties
 public class BaseActivity {
 
     public String petUid = null;

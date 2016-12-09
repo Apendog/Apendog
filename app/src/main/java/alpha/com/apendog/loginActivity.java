@@ -240,7 +240,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         for (int i = 0; i < mMeals.length; i++) {
             mMeals[i] = false;
         }
-        dogProfile.setMeals(mMeals);
+//        dogProfile.setMeals(mMeals);
     }
     /*************************************
      * CALCULATE EXERCISE
@@ -269,7 +269,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         for (int i = 0; i < mWalks.length; i++) {
             mWalks[i] = false;
         }
-        dogProfile.setWalks(mWalks);
+//        dogProfile.setWalks(mWalks);
     }
     /****************************************
      * DO CALCULATIONS
@@ -569,6 +569,17 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
             ageNumberPicker.setMinValue(1);
             ageNumberPicker.setMaxValue(25);
         }
+    }
+
+    /***************************************************************
+     *  go to Add a Pet page
+     ***************************************************************/
+    public void goToPetAdd(View view){
+        Intent intent = new Intent(loginActivity.this, AddPet.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        Log.d("Ed-Log", "goToAddPet--- Ran");
     }
 
 }
