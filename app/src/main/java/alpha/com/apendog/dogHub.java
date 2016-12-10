@@ -48,7 +48,7 @@ public class dogHub extends AppCompatActivity {
     public dogProfile dProfile1;
 // need to check the spellings on this
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference mDatabase;
+    DatabaseReference mDatabase = database.getReference();
     DatabaseReference mActivityReference;
     private ValueEventListener mActivityListener;
 
@@ -71,6 +71,43 @@ public class dogHub extends AppCompatActivity {
                 .child("Activities").child(mActivityKey);;
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        database.getInstance().getReference().child("dProfile").child("-KY5exo6b85U8aTlMx6r");
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get user information
+
+                dogProfile dProfile = dataSnapshot.getValue(dogProfile.class);
+
+                String uid = dProfile.uid;
+                String dogName = dProfile.dogName;
+                int dogAge = dProfile.getDogAge();
+                int dogWeight = dProfile.getDogWeight();
+                int dogEnergy = dProfile.getDogEnergy();
+                int calorieCount = dProfile.getCalorieCount();
+                int peeHours = dProfile.getPeeHours();
+                int pooHours = dProfile.getPooHours();
+                int calPerMeal = dProfile.getCalPerMeal();
+                int walkDuration = dProfile.getWalkDuration();
+                int walkCount = dProfile.getWalkCount();
+                Date lastPeed = dProfile.getLastPeed();
+                Date lastPooed = dProfile.getLastPooed();
+                boolean walk0 = dProfile.getWalk0();
+                boolean walk1 = dProfile.getWalk1();
+                boolean meal0 = dProfile.getMeal0();
+                boolean meal1 = dProfile.getMeal1();
+
+                dProfile1 = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount, peeHours,
+                        pooHours, calPerMeal, walkDuration, walkCount, lastPeed, lastPooed, walk0,
+                        walk1, meal0, meal1);
+                Log.d(TAG, "getDogProfile " + uid + " dogName: " + dogName + " dogWeight: " + dogWeight + " dogEnergy: " + dogEnergy + " cc: " + calorieCount);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         // put name from profile on hub
         dogName = (TextView) findViewById(R.id.dogNameView);
 //        mAuthorView = (TextView) findViewById(R.id.petUidView);
@@ -128,10 +165,10 @@ public class dogHub extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                // BaseActivity baseActivity = dataSnapshot.getValue(BaseActivity.class);
-                //dogProfile dProfile = dataSnapshot.getValue(dogProfile.class);
+
+                dogProfile dProfile = dataSnapshot.getValue(dogProfile.class);
                 // [START_EXCLUDE]
-         //       dogName.setText(dProfile.dogName);
+                  dogName.setText(dProfile.dogName);
 //                mAuthorView.setText(baseActivity.petUid);
 //                mUserUid.setText(baseActivity.userUid);
 //                mBodyView.setText(baseActivity.duration);
@@ -155,7 +192,7 @@ public class dogHub extends AppCompatActivity {
         mActivityListener = baseActivityListener;
 
         //myDogProfile = (dogProfile)getIntent().getSerializableExtra("dogProfile");
-        dogName.setText("Let " + dProfile1.getDogName() + " go...");
+       /* dogName.setText("Let " + dProfile1.getDogName() + " go...");
         peeDoneButton.setText(dProfile1.getDogName() + " peed!");
         pooDoneButton.setText(dProfile1.getDogName() + " pooed!");
         walkCheck0.setText("Walked for " + String.valueOf(dProfile1.getWalkDuration()) + " minutes");
@@ -163,7 +200,7 @@ public class dogHub extends AppCompatActivity {
         walkedDoneButton.setText("I walked " + dProfile1.getDogName() + "!");
         mealCheck0.setText("Fed " + String.valueOf(dProfile1.getCalPerMeal()) + " k/cal of food");
         mealCheck1.setText("Fed " + String.valueOf(dProfile1.getCalPerMeal()) + " k/cal of food");
-        mealDoneButton.setText("I fed " + dProfile1.getDogName() + "!");
+        mealDoneButton.setText("I fed " + dProfile1.getDogName() + "!");*/
     }
     // [END on_start_add_listener]
 
@@ -200,48 +237,12 @@ public class dogHub extends AppCompatActivity {
 
 
 
-        FirebaseDatabase.getInstance().getReference().child("dProfile").child("-KY5exo6b85U8aTlMx6r")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // Get user information
 
-                        dogProfile dProfile = dataSnapshot.getValue(dogProfile.class);
-
-                        String uid = dProfile.uid;
-                        String dogName = dProfile.dogName;
-                        int dogAge = dProfile.getDogAge();
-                        int dogWeight = dProfile.getDogWeight();
-                        int dogEnergy = dProfile.getDogEnergy();
-                        int calorieCount = dProfile.getCalorieCount();
-                        int peeHours = dProfile.getPeeHours();
-                        int pooHours = dProfile.getPooHours();
-                        int calPerMeal = dProfile.getCalPerMeal();
-                        int walkDuration = dProfile.getWalkDuration();
-                        int walkCount = dProfile.getWalkCount();
-                        Date lastPeed = dProfile.getLastPeed();
-                        Date lastPooed = dProfile.getLastPooed();
-                        boolean walk0 = dProfile.getWalk0();
-                        boolean walk1 = dProfile.getWalk1();
-                        boolean meal0 = dProfile.getMeal0();
-                        boolean meal1 = dProfile.getMeal1();
-
-                       dProfile1 = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount, peeHours,
-                               pooHours, calPerMeal, walkDuration, walkCount, lastPeed, lastPooed, walk0,
-                               walk1, meal0, meal1);
-                        Log.d(TAG, "getDogProfile " + uid + " dogName: " + dogName + " dogWeight: " + dogWeight + " dogEnergy: " + dogEnergy + " cc: " + calorieCount);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
     }
 
     private void getUserProfile() {
 
-        FirebaseDatabase.getInstance().getReference().child("oProfile").child(uid)
+        database.getInstance().getReference().child("oProfile").child(uid)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
