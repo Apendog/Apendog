@@ -51,6 +51,8 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
     public String userUid;
 
     public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+    public String dogKey = null;
+    Intent i;
     private static final String TAG = "Ed-Log";
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -62,6 +64,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        i = new Intent(loginActivity.this, dogHub.class);
         //Auth creation
 
 /***************************************************************
@@ -283,6 +286,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         calFeed();
         calExercise();
     }
+
 
     /*****************************************************
      * * ON RADIO BUTTON CLICKED
@@ -515,8 +519,6 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
             Log.d("Print of Dog Data", "Last Pooed: " + dogProfile.getLastPooed().toString());
 
             sendDogData();
-            Intent i = new Intent(loginActivity.this, dogHub.class);
-            i.putExtra("dogProfile", dogProfile);
             startActivity(i);
         }
         else {
@@ -535,7 +537,9 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneousl
 
-        String key = mDatabase.child("dProfile").push().getKey();
+        dogKey = mDatabase.child("dProfile").push().getKey();
+        i.putExtra("dogKey",dogKey);
+        Log.d("DOG-ID:", dogKey);
 //        int pCount = mDatabase.child("dProfile/" + uid + "/petCount");
         dogProfile dProfile = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount, peeHours,
         pooHours, calPerMeal, walkDuration, walkCount, lastPeed, lastPooed, walk0,
@@ -543,8 +547,8 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         Map<String, Object> postValues = dProfile.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/dProfile/" + key, postValues);
-        childUpdates.put("/oProfile/" + uid + "/pet/", key);
+        childUpdates.put("/dProfile/" + dogKey, postValues);
+        childUpdates.put("/oProfile/" + uid + "/pet/", dogKey);
         childUpdates.put("/oProfile/" + uid + "/hasPetProfile/", true);
 
         mDatabase.updateChildren(childUpdates);
