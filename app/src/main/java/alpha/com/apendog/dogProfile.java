@@ -38,7 +38,7 @@ public class dogProfile implements Serializable{
 
 
     public dogProfile() {
-        // Default constructor required for calls to DataSnapshot.getValue(Post.class)
+        // Default constructor required for calls to DataSnapshot.getValue(dogProfile.class)
     }
 
     public dogProfile(String uid, String dogName, int dogAge, int dogWeight, int dogEnergy, int calorieCount, int peeHours,

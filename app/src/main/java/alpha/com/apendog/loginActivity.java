@@ -587,4 +587,15 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         }
     }
 
+    /***************************************************************
+     *  go to Add a Pet page
+     ***************************************************************/
+    public void goToPetAdd(View view){
+        Intent intent = new Intent(loginActivity.this, AddPet.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        Log.d("Ed-Log", "goToAddPet--- Ran");
+    }
+
 }
