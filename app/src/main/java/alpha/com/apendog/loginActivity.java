@@ -49,10 +49,8 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
     public NumberPicker calorieTypePicker = null;
     public AlertDialog alertDialog = null;
     public String userUid;
-
-    public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
-    public String dogKey = null;
-    Intent i;
+    public String petUid;
+    public final static String EXTRA_MESSAGE = "PetUId";
     private static final String TAG = "Ed-Log";
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -64,8 +62,6 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        i = new Intent(loginActivity.this, dogHub.class);
-        //Auth creation
 
 /***************************************************************
  *  Getting Auth instance and setting listener.
@@ -207,6 +203,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         }
         dogProfile.setLastPeed(new Date());
     }
+
     /*************************************
      * CALCULATE BUSINESS TWO
      *  This calculates how long dog can hold poo.
@@ -217,6 +214,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         dogProfile.setPooHours(24);
         dogProfile.setLastPooed(new Date());
     }
+
     /*************************************
      * CALCULATE FEED
      *  Calculates how many calories the dog should eat each meal
@@ -248,6 +246,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         dogProfile.setMeal0(meal0);
         dogProfile.setMeal1(meal1);
     }
+
     /*************************************
      * CALCULATE EXERCISE
      *  calculates how long the walks need to be and how many
@@ -276,6 +275,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         dogProfile.setWalk0(walk0);
         dogProfile.setWalk1(walk1);
     }
+
     /****************************************
      * DO CALCULATIONS
      *  executes methods that calculate dog data
@@ -286,7 +286,6 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         calFeed();
         calExercise();
     }
-
 
     /*****************************************************
      * * ON RADIO BUTTON CLICKED
@@ -318,6 +317,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
 
         }
     }
+
     public void setDogName() throws IOException {
         IOException e = new IOException("-Dog Name\n");
         if (dogName.getText().toString().isEmpty()) {
@@ -327,6 +327,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
             dogProfile.setDogName(dogName.getText().toString());
         }
     }
+
     public void setDogAge() throws IOException {
         IOException e = new IOException("-Dog Age\n");
         if (ageNumberPicker.getValue() == 0) {
@@ -340,6 +341,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
             }
         }
     }
+
     public void setDogWeight() throws IOException {
         IOException e = new IOException("-Dog Weight\n");
         if (weightSeeker.getProgress() < 1) {
@@ -349,6 +351,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
             dogProfile.setDogWeight(weightSeeker.getProgress());
         }
     }
+
     public void setDogEnergy() throws IOException  {
         IOException e = new IOException("-Dog Energy\n");
         if(energyLevel == -1) {
@@ -358,6 +361,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
             dogProfile.setDogEnergy(energyLevel);
         }
     }
+
     public void setCalorieCount() throws IOException {
         IOException e = new IOException("-Calorie Count of Food");
         if (calorieCount.getText().toString().isEmpty()){
@@ -407,15 +411,10 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         final boolean meal0 = dogProfile.getMeal0();
         final boolean meal1 = dogProfile.getMeal1();
 
-
-
         mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        // Get user value
-//                        User user = dataSnapshot.getValue(User.class);
-
                         // [START_EXCLUDE]
                         if (userId == null) {
                             // User is null, error out
@@ -424,7 +423,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
                                     "Error: could not fetch user.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            // Write new post
+                            // Write new dog Profile
                             writeDogProfile(userId, dogName, dogAge, dogWeight, dogEnergy, calorieCount, peeHours,
                                     pooHours, calPerMeal, walkDuration, walkCount, lastPeed, lastPooed, walk0,
                                     walk1, meal0, meal1);
@@ -519,7 +518,6 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
             Log.d("Print of Dog Data", "Last Pooed: " + dogProfile.getLastPooed().toString());
 
             sendDogData();
-            startActivity(i);
         }
         else {
             alertDialog.setMessage("Please Fill Out The Following:\n\n" + errorMessage);
@@ -534,24 +532,21 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
     private void writeDogProfile(String uid, String dogName, int dogAge, int dogWeight, int dogEnergy, int calorieCount, int peeHours,
                                  int pooHours, int calPerMeal, int walkDuration, int walkCount, Date lastPeed, Date lastPooed, boolean walk0,
                                  boolean walk1, boolean meal0, boolean meal1) {
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneousl
 
-        dogKey = mDatabase.child("dProfile").push().getKey();
-        i.putExtra("dogKey",dogKey);
-        Log.d("DOG-ID:", dogKey);
-//        int pCount = mDatabase.child("dProfile/" + uid + "/petCount");
+        petUid = mDatabase.child("dProfile").push().getKey();
+
         dogProfile dProfile = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount, peeHours,
         pooHours, calPerMeal, walkDuration, walkCount, lastPeed, lastPooed, walk0,
         walk1, meal0, meal1); //this function needs values passed to it.
         Map<String, Object> postValues = dProfile.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/dProfile/" + dogKey, postValues);
-        childUpdates.put("/oProfile/" + uid + "/pet/", dogKey);
+        childUpdates.put("/dProfile/" + petUid, postValues);
+        childUpdates.put("/oProfile/" + uid + "/pet/", petUid);
         childUpdates.put("/oProfile/" + uid + "/hasPetProfile/", true);
 
         mDatabase.updateChildren(childUpdates);
+        passPetUid(petUid);
     }
 
 
@@ -608,6 +603,17 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         intent.putExtra(EXTRA_MESSAGE, userUid);
         startActivity(intent);
         Log.d("Ed-Log", "goToAddPet--- Ran");
+    }
+    /***************************************************************
+     *  go to dogHub Page
+     ***************************************************************/
+    public void passPetUid(String x){
+        Intent intent = new Intent(loginActivity.this, dogHub.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra(EXTRA_MESSAGE, x);
+        startActivity(intent);
+        Log.d("Ed-Log", "PassPetUid Ran: " + x);
     }
 
 }
