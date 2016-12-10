@@ -65,7 +65,7 @@ public class dogHub extends AppCompatActivity {
 
         Intent intent = getIntent();
         mpetUid = intent.getStringExtra(AddPet.EXTRA_MESSAGE);
-
+        Log.d(TAG, "mPetUid: " + mpetUid);
         // Initialize Database
         mActivityReference = FirebaseDatabase.getInstance().getReference()
                 .child("dProfile").child(mpetUid);;
