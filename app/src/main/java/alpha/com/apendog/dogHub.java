@@ -40,8 +40,8 @@ public class dogHub extends AppCompatActivity {
     public CheckBox mealCheck1;
     public Button mealDoneButton;
     public TextView dogName;
-    public String dogKey;
-
+    public String mpetUid;
+              //delete this ^^^^^^^^^^^^^^^^^^^^^^ After the petUid is passed with intent
 
 
 // need to check the spellings on this
@@ -58,19 +58,17 @@ public class dogHub extends AppCompatActivity {
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_hub);
-        Bundle extras = getIntent().getExtras();
-        dogKey = extras.getString("dogKey");
-        Log.d("Dog-key in dog hub", dogKey);
+
+        Intent intent = getIntent();
+        mpetUid = intent.getStringExtra(AddPet.EXTRA_MESSAGE);
+
         // Initialize Database
-        /*mActivityReference = FirebaseDatabase.getInstance().getReference()
-                .child("dProfile").child(mpetUid);*/
+        mActivityReference = FirebaseDatabase.getInstance().getReference()
+                .child("dProfile").child(mpetUid);;
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -163,7 +161,7 @@ public class dogHub extends AppCompatActivity {
                 // [END_EXCLUDE]
             }
         };
-        /*mActivityReference.addValueEventListener(dogProfileListener);*/
+        mActivityReference.addValueEventListener(dogProfileListener);
 
         // [END post_value_event_listener]
 
@@ -203,8 +201,7 @@ public class dogHub extends AppCompatActivity {
      * This is to get the dog profile one time
      */
     private void getDogProfile() {
-
-        FirebaseDatabase.getInstance().getReference().child("dProfile").child(dogKey)
+        FirebaseDatabase.getInstance().getReference().child("dProfile").child(mpetUid)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -253,7 +250,7 @@ public class dogHub extends AppCompatActivity {
                         String userName = user.username;
                         String email = user.email;
                         boolean hasPetProfile = user.hasPetProfile;
-                        //dogKey = user.petUid;
+                        mpetUid = user.petUid;
 
                     }
 

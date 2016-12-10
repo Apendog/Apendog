@@ -34,6 +34,7 @@ import java.util.Map;
 
 
 public class loginActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
+
     public dogProfile dogProfile = new dogProfile();
     int weight = 0;
     int energyLevel = -1;
@@ -47,8 +48,9 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
     public EditText     calorieCount      = null;
     public NumberPicker calorieTypePicker = null;
     public AlertDialog alertDialog = null;
-    public String dogKey = null;
-    Intent i;
+    public String userUid;
+
+    public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private static final String TAG = "Ed-Log";
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -60,7 +62,6 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        i = new Intent(loginActivity.this, dogHub.class);
         //Auth creation
 
 /***************************************************************
@@ -79,6 +80,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
+                    userUid = user.getUid();
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
@@ -281,7 +283,6 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         calFeed();
         calExercise();
     }
-
 
     /*****************************************************
      * * ON RADIO BUTTON CLICKED
@@ -514,6 +515,8 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
             Log.d("Print of Dog Data", "Last Pooed: " + dogProfile.getLastPooed().toString());
 
             sendDogData();
+            Intent i = new Intent(loginActivity.this, dogHub.class);
+            i.putExtra("dogProfile", dogProfile);
             startActivity(i);
         }
         else {
@@ -532,9 +535,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneousl
 
-        dogKey = mDatabase.child("dProfile").push().getKey();
-        i.putExtra("dogKey",dogKey);
-        Log.d("DOG-ID:", dogKey);
+        String key = mDatabase.child("dProfile").push().getKey();
 //        int pCount = mDatabase.child("dProfile/" + uid + "/petCount");
         dogProfile dProfile = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount, peeHours,
         pooHours, calPerMeal, walkDuration, walkCount, lastPeed, lastPooed, walk0,
@@ -542,8 +543,8 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         Map<String, Object> postValues = dProfile.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/dProfile/" + dogKey, postValues);
-        childUpdates.put("/oProfile/" + uid + "/pet/", dogKey);
+        childUpdates.put("/dProfile/" + key, postValues);
+        childUpdates.put("/oProfile/" + uid + "/pet/", key);
         childUpdates.put("/oProfile/" + uid + "/hasPetProfile/", true);
 
         mDatabase.updateChildren(childUpdates);
@@ -551,7 +552,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
 
 
     /***************************************************************
-     *  Starting and stoping the Listeners
+     *  Starting and stopping the Auth Listeners
      ***************************************************************/
     @Override
     public void onStart() {
@@ -569,6 +570,9 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         }
     }
 
+    /***************************************************************
+     *  Signout Function
+     ***************************************************************/
     public void signOut() {
         mAuth.signOut();
     }
@@ -597,6 +601,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         Intent intent = new Intent(loginActivity.this, AddPet.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra(EXTRA_MESSAGE, userUid);
         startActivity(intent);
         Log.d("Ed-Log", "goToAddPet--- Ran");
     }
