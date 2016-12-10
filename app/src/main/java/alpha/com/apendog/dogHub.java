@@ -40,20 +40,17 @@ public class dogHub extends AppCompatActivity {
     public CheckBox mealCheck1;
     public Button mealDoneButton;
     public TextView dogName;
-    private TextView mAuthorView;
-    private TextView mUserUid;
-    private TextView mBodyView;
+    public String mpetUid = "-KYaJzx0dIsfNIFkzhR_";
+              //delete this ^^^^^^^^^^^^^^^^^^^^^^ After the petUid is passed with intent
 
-    private String mActivityKey;
-    public dogProfile dProfile1;
+
 // need to check the spellings on this
-    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+
     DatabaseReference mDatabase;
     DatabaseReference mActivityReference;
     private ValueEventListener mActivityListener;
-    dogProfile dProfile1 = null;
+    public dogProfile dProfile1 = null;
 
-    String rDogName = dProfile1.dogName;
     private FirebaseAuth mAuth;
 
     private static final String TAG = "Ed-Log";
@@ -66,17 +63,14 @@ public class dogHub extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_hub);
 
-        mActivityKey = "testActivity";
         // Initialize Database
         mActivityReference = FirebaseDatabase.getInstance().getReference()
-                .child("Activities").child(mActivityKey);;
+                .child("dProfile").child(mpetUid);;
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+
         // put name from profile on hub
         dogName = (TextView) findViewById(R.id.dogNameView);
-//        mAuthorView = (TextView) findViewById(R.id.petUidView);
-//        mUserUid = (TextView) findViewById(R.id.userUidView);
-//        mBodyView = (TextView) findViewById(R.id.durationView);
         peeTicker = (TextView) findViewById(R.id.peeTicker);
         pooTicker = (TextView) findViewById(R.id.pooTicker);
         peeDoneButton = (Button) findViewById(R.id.peeDoneButton);
@@ -99,6 +93,13 @@ public class dogHub extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     uid = user.getUid();
+
+                    getUserProfile();
+                    getDogProfile();
+
+
+
+
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
@@ -115,6 +116,7 @@ public class dogHub extends AppCompatActivity {
         };
 
 
+
     }
 
 
@@ -125,17 +127,24 @@ public class dogHub extends AppCompatActivity {
         mAuth.addAuthStateListener(mAuthListener);
 
         // [START basicActivity_listener]
-        ValueEventListener baseActivityListener = new ValueEventListener() {
+        ValueEventListener dogProfileListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                // BaseActivity baseActivity = dataSnapshot.getValue(BaseActivity.class);
-                //dogProfile dProfile = dataSnapshot.getValue(dogProfile.class);
+
+                dogProfile dProfile1 = dataSnapshot.getValue(dogProfile.class);
+
                 // [START_EXCLUDE]
-         //       dogName.setText(dProfile.dogName);
-//                mAuthorView.setText(baseActivity.petUid);
-//                mUserUid.setText(baseActivity.userUid);
-//                mBodyView.setText(baseActivity.duration);
+                dogName.setText("Let " + dProfile1.getDogName() + " go...");
+                peeDoneButton.setText(dProfile1.getDogName() + " peed!");
+                pooDoneButton.setText(dProfile1.getDogName() + " pooed!");
+                walkCheck0.setText("Walked for " + String.valueOf(dProfile1.getWalkDuration()) + " minutes");
+                walkCheck1.setText("Walked for " + String.valueOf(dProfile1.getWalkDuration()) + " minutes");
+                walkedDoneButton.setText("I walked " + dProfile1.getDogName() + "!");
+                mealCheck0.setText("Fed " + String.valueOf(dProfile1.getCalPerMeal()) + " k/cal of food");
+                mealCheck1.setText("Fed " + String.valueOf(dProfile1.getCalPerMeal()) + " k/cal of food");
+                mealDoneButton.setText("I fed " + dProfile1.getDogName() + "!");
+
                 // [END_EXCLUDE]
             }
 
@@ -149,22 +158,14 @@ public class dogHub extends AppCompatActivity {
                 // [END_EXCLUDE]
             }
         };
-        mActivityReference.addValueEventListener(baseActivityListener);
+        mActivityReference.addValueEventListener(dogProfileListener);
 
         // [END post_value_event_listener]
 
-        mActivityListener = baseActivityListener;
+        mActivityListener = dogProfileListener;
 
         //myDogProfile = (dogProfile)getIntent().getSerializableExtra("dogProfile");
-        dogName.setText("Let " + dProfile1.getDogName() + " go...");
-        peeDoneButton.setText(dProfile1.getDogName() + " peed!");
-        pooDoneButton.setText(dProfile1.getDogName() + " pooed!");
-        walkCheck0.setText("Walked for " + String.valueOf(dProfile1.getWalkDuration()) + " minutes");
-        walkCheck1.setText("Walked for " + String.valueOf(dProfile1.getWalkDuration()) + " minutes");
-        walkedDoneButton.setText("I walked " + dProfile1.getDogName() + "!");
-        mealCheck0.setText("Fed " + String.valueOf(dProfile1.getCalPerMeal()) + " k/cal of food");
-        mealCheck1.setText("Fed " + String.valueOf(dProfile1.getCalPerMeal()) + " k/cal of food");
-        mealDoneButton.setText("I fed " + dProfile1.getDogName() + "!");
+
     }
     // [END on_start_add_listener]
 
@@ -197,7 +198,7 @@ public class dogHub extends AppCompatActivity {
      * This is to get the dog profile one time
      */
     private void getDogProfile() {
-        FirebaseDatabase.getInstance().getReference().child("dProfile").child("-KY5exo6b85U8aTlMx6r")
+        FirebaseDatabase.getInstance().getReference().child("dProfile").child(mpetUid)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -246,7 +247,8 @@ public class dogHub extends AppCompatActivity {
                         String userName = user.username;
                         String email = user.email;
                         boolean hasPetProfile = user.hasPetProfile;
-                        String petUid = user.petUid;
+                        mpetUid = user.petUid;
+
                     }
 
                     @Override
