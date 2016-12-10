@@ -236,11 +236,10 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         dailyCal = dailyCal * multiplier;
         mealCal = (int) Math.round(dailyCal / 2);
         dogProfile.setCalPerMeal(mealCal);
-        boolean mMeals[] = new boolean[1];
-        for (int i = 0; i < mMeals.length; i++) {
-            mMeals[i] = false;
-        }
-//        dogProfile.setMeals(mMeals);
+        boolean meal0 = false;
+        boolean meal1 = false;
+        dogProfile.setMeal0(meal0);
+        dogProfile.setMeal1(meal1);
     }
     /*************************************
      * CALCULATE EXERCISE
@@ -265,11 +264,10 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
                 dogProfile.setWalkCount(2);
                 dogProfile.setWalkDuration(30);
         }
-        boolean mWalks[] = new boolean[dogProfile.getWalkCount()];
-        for (int i = 0; i < mWalks.length; i++) {
-            mWalks[i] = false;
-        }
-//        dogProfile.setWalks(mWalks);
+        boolean walk0 = false;
+        boolean walk1 = false;
+        dogProfile.setWalk0(walk0);
+        dogProfile.setWalk1(walk1);
     }
     /****************************************
      * DO CALCULATIONS
@@ -389,6 +387,18 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         final int dogWeight = dogProfile.getDogWeight();
         final int dogEnergy = dogProfile.getDogEnergy();
         final int calorieCount = dogProfile.getCalorieCount();
+        final int peeHours = dogProfile.getPeeHours();
+        final int pooHours = dogProfile.getPooHours();
+        final int calPerMeal = dogProfile.getCalPerMeal();
+        final int walkDuration = dogProfile.getWalkDuration();
+        final int walkCount = dogProfile.getWalkCount();
+        final Date lastPeed = dogProfile.getLastPeed();
+        final Date lastPooed = dogProfile.getLastPooed();
+        final boolean walk0 = dogProfile.getWalk0();
+        final boolean walk1 = dogProfile.getWalk1();
+        final boolean meal0 = dogProfile.getMeal0();
+        final boolean meal1 = dogProfile.getMeal1();
+
 
 
         mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
@@ -407,7 +417,9 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             // Write new post
-                            writeDogProfile(userId, dogName, dogAge, dogWeight, dogEnergy, calorieCount);
+                            writeDogProfile(userId, dogName, dogAge, dogWeight, dogEnergy, calorieCount, peeHours,
+                                    pooHours, calPerMeal, walkDuration, walkCount, lastPeed, lastPooed, walk0,
+                                    walk1, meal0, meal1);
                         }
 
                         // Finish this Activity, back to the stream
@@ -513,13 +525,17 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
     /***************************************************************
      *  Write to the DB
      ***************************************************************/
-    private void writeDogProfile(String uid, String dogName, int dogAge, int dogWeight, int dogEnergy, int calorieCount) {
+    private void writeDogProfile(String uid, String dogName, int dogAge, int dogWeight, int dogEnergy, int calorieCount, int peeHours,
+                                 int pooHours, int calPerMeal, int walkDuration, int walkCount, Date lastPeed, Date lastPooed, boolean walk0,
+                                 boolean walk1, boolean meal0, boolean meal1) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneousl
 
         String key = mDatabase.child("dProfile").push().getKey();
 //        int pCount = mDatabase.child("dProfile/" + uid + "/petCount");
-        dogProfile dProfile = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount); //this function needs values passed to it.
+        dogProfile dProfile = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount, peeHours,
+        pooHours, calPerMeal, walkDuration, walkCount, lastPeed, lastPooed, walk0,
+        walk1, meal0, meal1); //this function needs values passed to it.
         Map<String, Object> postValues = dProfile.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();

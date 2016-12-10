@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,15 +45,17 @@ public class dogHub extends AppCompatActivity {
     private TextView mBodyView;
 
     private String mActivityKey;
-    public dogProfile myDogProfile;
+    public dogProfile dProfile1;
 // need to check the spellings on this
-    private DatabaseReference mActivityReference;
+    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference mDatabase;
+    DatabaseReference mActivityReference;
     private ValueEventListener mActivityListener;
     dogProfile dProfile1 = null;
 
     String rDogName = dProfile1.dogName;
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
+
     private static final String TAG = "Ed-Log";
     private static String uid;
 
@@ -62,6 +65,7 @@ public class dogHub extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_hub);
+
         mActivityKey = "testActivity";
         // Initialize Database
         mActivityReference = FirebaseDatabase.getInstance().getReference()
@@ -84,18 +88,6 @@ public class dogHub extends AppCompatActivity {
         mealCheck1 = (CheckBox) findViewById(R.id.mealCheck1);
         mealDoneButton = (Button) findViewById(R.id.mealDoneButton);
 
-        getDogProfile();
-
-        myDogProfile = (dogProfile)getIntent().getSerializableExtra("dogProfile");
-        dogName.setText("Let " + myDogProfile.getDogName() + " go...");
-        peeDoneButton.setText(myDogProfile.getDogName() + " peed!");
-        pooDoneButton.setText(myDogProfile.getDogName() + " pooed!");
-        walkCheck0.setText("Walked for " + String.valueOf(myDogProfile.getWalkDuration()) + " minutes");
-        walkCheck1.setText("Walked for " + String.valueOf(myDogProfile.getWalkDuration()) + " minutes");
-        walkedDoneButton.setText("I walked " + myDogProfile.getDogName() + "!");
-        mealCheck0.setText("Fed " + String.valueOf(myDogProfile.getCalPerMeal()) + " k/cal of food");
-        mealCheck1.setText("Fed " + String.valueOf(myDogProfile.getCalPerMeal()) + " k/cal of food");
-        mealDoneButton.setText("I fed " + myDogProfile.getDogName() + "!");
 
 
         mAuth = FirebaseAuth.getInstance();
@@ -121,6 +113,8 @@ public class dogHub extends AppCompatActivity {
                 // [END_EXCLUDE]
             }
         };
+
+
     }
 
 
@@ -135,8 +129,8 @@ public class dogHub extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                BaseActivity baseActivity = dataSnapshot.getValue(BaseActivity.class);
-                dogProfile dProfile = dataSnapshot.getValue(dogProfile.class);
+                // BaseActivity baseActivity = dataSnapshot.getValue(BaseActivity.class);
+                //dogProfile dProfile = dataSnapshot.getValue(dogProfile.class);
                 // [START_EXCLUDE]
          //       dogName.setText(dProfile.dogName);
 //                mAuthorView.setText(baseActivity.petUid);
@@ -156,9 +150,21 @@ public class dogHub extends AppCompatActivity {
             }
         };
         mActivityReference.addValueEventListener(baseActivityListener);
+
         // [END post_value_event_listener]
 
         mActivityListener = baseActivityListener;
+
+        //myDogProfile = (dogProfile)getIntent().getSerializableExtra("dogProfile");
+        dogName.setText("Let " + dProfile1.getDogName() + " go...");
+        peeDoneButton.setText(dProfile1.getDogName() + " peed!");
+        pooDoneButton.setText(dProfile1.getDogName() + " pooed!");
+        walkCheck0.setText("Walked for " + String.valueOf(dProfile1.getWalkDuration()) + " minutes");
+        walkCheck1.setText("Walked for " + String.valueOf(dProfile1.getWalkDuration()) + " minutes");
+        walkedDoneButton.setText("I walked " + dProfile1.getDogName() + "!");
+        mealCheck0.setText("Fed " + String.valueOf(dProfile1.getCalPerMeal()) + " k/cal of food");
+        mealCheck1.setText("Fed " + String.valueOf(dProfile1.getCalPerMeal()) + " k/cal of food");
+        mealDoneButton.setText("I fed " + dProfile1.getDogName() + "!");
     }
     // [END on_start_add_listener]
 
@@ -196,6 +202,7 @@ public class dogHub extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // Get user information
+
                         dogProfile dProfile = dataSnapshot.getValue(dogProfile.class);
                         String uid = dProfile.uid;
                         String dogName = dProfile.dogName;
@@ -203,8 +210,21 @@ public class dogHub extends AppCompatActivity {
                         int dogWeight = dProfile.getDogWeight();
                         int dogEnergy = dProfile.getDogEnergy();
                         int calorieCount = dProfile.getCalorieCount();
+                        int peeHours = dProfile.getPeeHours();
+                        int pooHours = dProfile.getPooHours();
+                        int calPerMeal = dProfile.getCalPerMeal();
+                        int walkDuration = dProfile.getWalkDuration();
+                        int walkCount = dProfile.getWalkCount();
+                        Date lastPeed = dProfile.getLastPeed();
+                        Date lastPooed = dProfile.getLastPooed();
+                        boolean walk0 = dProfile.getWalk0();
+                        boolean walk1 = dProfile.getWalk1();
+                        boolean meal0 = dProfile.getMeal0();
+                        boolean meal1 = dProfile.getMeal1();
 
-                        dProfile1 = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount);
+                       dProfile1 = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount, peeHours,
+                               pooHours, calPerMeal, walkDuration, walkCount, lastPeed, lastPooed, walk0,
+                               walk1, meal0, meal1);
                         Log.d(TAG, "getDogProfile " + uid + " dogName: " + dogName + " dogWeight: " + dogWeight + " dogEnergy: " + dogEnergy + " cc: " + calorieCount);
                     }
 

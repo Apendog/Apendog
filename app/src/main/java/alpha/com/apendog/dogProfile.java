@@ -29,8 +29,10 @@ public class dogProfile implements Serializable{
     private int walkCount = 0;    //how many walks per day
     private Date lastPeed;        //last time the dog peed
     private Date lastPooed;       //last time the dog took a dookie
-    private boolean walks = false;      //walks;
-    private boolean meals = false;     //the dog's two meals
+    private boolean walk0;        //first walk;
+    private boolean walk1;        //second walk;
+    private boolean meal0;        //first meal;
+    private boolean meal1;        //second meal;
 
 
 
@@ -39,13 +41,26 @@ public class dogProfile implements Serializable{
         // Default constructor required for calls to DataSnapshot.getValue(dogProfile.class)
     }
 
-    public dogProfile(String uid, String dogName, int dogAge, int dogWeight, int dogEnergy, int calorieCount) {
+    public dogProfile(String uid, String dogName, int dogAge, int dogWeight, int dogEnergy, int calorieCount, int peeHours,
+                      int pooHours, int calPerMeal, int walkDuration, int walkCount, Date lastPeed, Date lastPooed, boolean walk0,
+                      boolean walk1, boolean meal0, boolean meal1) {
         this.uid = uid;
         this.dogName = dogName;
         this.dogAge = dogAge;
         this.dogWeight = dogWeight;
         this.dogEnergy = dogEnergy;
         this.calorieCount = calorieCount;
+        this.peeHours = peeHours;
+        this.pooHours = pooHours;
+        this.calPerMeal = calPerMeal;
+        this.walkDuration = walkDuration;
+        this.walkCount = walkCount;
+        this.lastPeed = lastPeed;
+        this.lastPooed = lastPooed;
+        this.walk0 = walk0;
+        this.walk1 = walk1;
+        this.meal0 = meal0;
+        this.meal1 = meal1;
     }
 
     @Exclude
@@ -57,6 +72,16 @@ public class dogProfile implements Serializable{
         result.put("dogWeight", dogWeight);
         result.put("dogEnergy", dogEnergy);
         result.put("calorieCount", calorieCount);
+        result.put("peeHours", peeHours);
+        result.put("pooHours", pooHours);
+        result.put("calPerMeal", calPerMeal);
+        result.put("walkDuration", walkDuration);
+        result.put("lastPeed", lastPeed);
+        result.put("lastPooed", lastPooed);
+        result.put("walk0", walk0);
+        result.put("walk1", walk1);
+        result.put("meal0", meal0);
+        result.put("meal1", meal1);
 
         return result;
     }
@@ -96,9 +121,13 @@ public class dogProfile implements Serializable{
 
     public Date getLastPooed() {return lastPooed;}
 
-//    public boolean[] getWalks() {return walks;}
-//
-//    public boolean[] getMeals() {return meals;}
+    public boolean getWalk0() {return walk0;}
+
+    public boolean getWalk1() {return walk1;}
+
+    public boolean getMeal0() {return meal0;}
+
+    public boolean getMeal1() {return meal1;}
 
     // --SETTERS--
     public void setDogName(String dogName) {
@@ -135,8 +164,11 @@ public class dogProfile implements Serializable{
 
     public void setLastPooed(Date lastPooed) {this.lastPooed = lastPooed;}
 
-//    public void setWalks(boolean walks[]) {this.walks = walks;}
-//
-//    public void setMeals(boolean meals[]) {this.meals = meals;}
+    public void setWalk0(boolean walk0) {this.walk0 = walk0;}
 
+    public void setWalk1(boolean walk1) {this.walk1 = walk1;}
+
+    public void setMeal0(boolean meal0) {this.meal0 = meal0;}
+
+    public void setMeal1(boolean meal1) {this.meal1 = meal1;}
 }
