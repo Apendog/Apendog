@@ -19,7 +19,7 @@
         android:layout_below="@+id/textView13"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="54dp"
-        android:id="@+id/editText" />
+        android:id="@+id/sharedDogUid" />
 
     <TextView
         android:text="-KYWHbiOit3RWaC73SOJ"
@@ -53,7 +53,7 @@
         android:layout_alignBottom="@+id/button5"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="44dp"
-        android:onClick="goToPetAdd" />
+        android:onClick="addPet" />
 
     <TextView
         android:text="Copy this and send to a friend to share a pet."

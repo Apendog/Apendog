@@ -34,6 +34,7 @@ import java.util.Map;
 
 
 public class loginActivity extends AppCompatActivity implements NumberPicker.OnValueChangeListener {
+
     public dogProfile dogProfile = new dogProfile();
     int weight = 0;
     int energyLevel = -1;
@@ -47,7 +48,9 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
     public EditText     calorieCount      = null;
     public NumberPicker calorieTypePicker = null;
     public AlertDialog alertDialog = null;
+    public String userUid;
 
+    public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private static final String TAG = "Ed-Log";
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -77,6 +80,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
+                    userUid = user.getUid();
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
@@ -548,7 +552,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
 
 
     /***************************************************************
-     *  Starting and stoping the Listeners
+     *  Starting and stopping the Auth Listeners
      ***************************************************************/
     @Override
     public void onStart() {
@@ -566,6 +570,9 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         }
     }
 
+    /***************************************************************
+     *  Signout Function
+     ***************************************************************/
     public void signOut() {
         mAuth.signOut();
     }
@@ -594,6 +601,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         Intent intent = new Intent(loginActivity.this, AddPet.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra(EXTRA_MESSAGE, userUid);
         startActivity(intent);
         Log.d("Ed-Log", "goToAddPet--- Ran");
     }

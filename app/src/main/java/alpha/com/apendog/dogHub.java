@@ -40,7 +40,7 @@ public class dogHub extends AppCompatActivity {
     public CheckBox mealCheck1;
     public Button mealDoneButton;
     public TextView dogName;
-    public String mpetUid = "-KYaJzx0dIsfNIFkzhR_";
+    public String mpetUid;
               //delete this ^^^^^^^^^^^^^^^^^^^^^^ After the petUid is passed with intent
 
 
@@ -62,6 +62,9 @@ public class dogHub extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dog_hub);
+
+        Intent intent = getIntent();
+        mpetUid = intent.getStringExtra(AddPet.EXTRA_MESSAGE);
 
         // Initialize Database
         mActivityReference = FirebaseDatabase.getInstance().getReference()
