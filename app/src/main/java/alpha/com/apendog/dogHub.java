@@ -49,7 +49,6 @@ public class dogHub extends AppCompatActivity {
 // need to check the spellings on this
 
     DatabaseReference mDatabase;
-    DatabaseReference mActivityReference;
     private ValueEventListener mActivityListener;
     public dogProfile dProfile1 = null;
 
@@ -70,13 +69,12 @@ public class dogHub extends AppCompatActivity {
 
         Intent intent = getIntent();
         mpetUid = intent.getStringExtra(AddPet.EXTRA_MESSAGE);
+        if (mpetUid == null)
+        {
+            mpetUid = intent.getStringExtra(loginActivity.EXTRA_MESSAGE);
+        }
         Log.d(TAG, "mPetUid: " + mpetUid);
-        Bundle extras = getIntent().getExtras();
-        dogKey = extras.getString("dogKey");
-        Log.d("Dog-key in dog hub", dogKey);
-        // Initialize Database
-        /*mActivityReference = FirebaseDatabase.getInstance().getReference()
-                .child("dProfile").child(mpetUid);*/
+
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -104,13 +102,8 @@ public class dogHub extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     uid = user.getUid();
-
                     getUserProfile();
                     getDogProfile();
-
-
-
-
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
                     // User is signed out
@@ -210,7 +203,7 @@ public class dogHub extends AppCompatActivity {
      */
     private void getDogProfile() {
 
-        FirebaseDatabase.getInstance().getReference().child("dProfile").child(dogKey)
+        FirebaseDatabase.getInstance().getReference().child("dProfile").child(mpetUid)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
