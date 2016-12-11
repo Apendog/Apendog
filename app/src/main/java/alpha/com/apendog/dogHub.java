@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -215,12 +216,15 @@ public class dogHub extends AppCompatActivity {
                         Log.d(TAG, "dProfile1: " + dProfile1);
                         peeDoneButton.setText(dProfile1.dogName + " peed!");
                         pooDoneButton.setText(dProfile1.dogName + " pooed!");
-                        walkCheck0.setText("Walked for " + String.valueOf(dProfile1.walk0) + " minutes");
-                        walkCheck1.setText("Walked for " + String.valueOf(dProfile1.walk1) + " minutes");
+                        walkCheck0.setText("Walked for " + String.valueOf(dProfile1.walkDuration) + " minutes");
+                        walkCheck1.setText("Walked for " + String.valueOf(dProfile1.walkDuration) + " minutes");
+                        walkCheck0.setChecked(dProfile1.walk0);
+                        walkCheck1.setChecked(dProfile1.walk1);
                         walkedDoneButton.setText("I walked " + dProfile1.dogName + "!");
                         mealCheck0.setText("Fed " + String.valueOf(dProfile1.meal0) + " k/cal of food");
                         mealCheck1.setText("Fed " + String.valueOf(dProfile1.meal1) + " k/cal of food");
                         mealDoneButton.setText("I fed " + dProfile1.dogName + "!");
+
                     }
 
                     @Override
@@ -259,6 +263,34 @@ public class dogHub extends AppCompatActivity {
         sendIntent.putExtra(Intent.EXTRA_TEXT, mpetUid);
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
+    }
+
+    public void walk0Click(View view) {
+        mDatabase.child("dProfile").child(mpetUid).child("walk0").setValue(true);
+    }
+
+    public void walk1Click(View view) {
+        mDatabase.child("dProfile").child(mpetUid).child("walk1").setValue(true);
+    }
+    public void onWalkClick (View view) {
+        Log.d("onWalkClick", "CLICKED");
+        if (!dProfile1.walk0) {
+            mDatabase.child("dProfile").child(mpetUid).child("walk0").setValue(true);
+            walkCheck0.setChecked(true);
+            Log.d("onWalkClick", "then statement ran");
+        } else {
+            mDatabase.child("dProfile").child(mpetUid).child("walk1").setValue(true);
+            walkCheck0.setChecked(true);
+            Log.d("onWalkClick", "else statement ran");
+
+        }
+    }
+    public void onFeedClick (View view) {
+        if (mDatabase.child("dProfile").child(mpetUid).child("meal0").equals(false)) {
+            mDatabase.child("dProfile").child(mpetUid).child("meal0").setValue(true);
+        } else {
+            mDatabase.child("dProfile").child(mpetUid).child("meal1").setValue(true);
+        }
     }
 
     public void signOut() {
