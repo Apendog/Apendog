@@ -18,21 +18,21 @@ import java.util.Map;
 public class dogProfile implements Serializable{
     public String uid = null;
     public String dogName = null;
-    private int dogAge = 0;       //in months!
-    private int dogWeight = 0;    //in pounds
-    private int dogEnergy = 0;    //how energetic dog is
-    private int calorieCount = 0; //kcal/CUP
-    private int peeHours = 0;     //how long the dog can hold pee
-    private int pooHours = 0;     //how long the dog can hold poo
-    private int calPerMeal = 0;   //amount of cal per meal
-    private int walkDuration = 0; //how long the individual walks must be
-    private int walkCount = 0;    //how many walks per day
-    private Date lastPeed;        //last time the dog peed
-    private Date lastPooed;       //last time the dog took a dookie
-    private boolean walk0;        //first walk;
-    private boolean walk1;        //second walk;
-    private boolean meal0;        //first meal;
-    private boolean meal1;        //second meal;
+    public int dogAge = 0;       //in months!
+    public int dogWeight = 0;    //in pounds
+    public int dogEnergy = 0;    //how energetic dog is
+    public int calorieCount = 0; //kcal/CUP
+    public int peeHours = 0;     //how long the dog can hold pee
+    public int pooHours = 0;     //how long the dog can hold poo
+    public int calPerMeal = 0;   //amount of cal per meal
+    public int walkDuration = 0; //how long the individual walks must be
+    public int walkCount = 0;    //how many walks per day
+    public Date lastPeed;        //last time the dog peed
+    public Date lastPooed;       //last time the dog took a dookie
+    public boolean walk0;        //first walk;
+    public boolean walk1;        //second walk;
+    public boolean meal0;        //first meal;
+    public boolean meal1;        //second meal;
 
 
 

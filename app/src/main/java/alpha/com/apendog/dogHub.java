@@ -136,19 +136,20 @@ public class dogHub extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
 
-                dogProfile dProfile1 = dataSnapshot.getValue(dogProfile.class);
+                dProfile1 = dataSnapshot.getValue(dogProfile.class);
 
                 // [START_EXCLUDE]
-                dogName.setText("Let " + dProfile1.getDogName() + " go...");
-                peeDoneButton.setText(dProfile1.getDogName() + " peed!");
-                pooDoneButton.setText(dProfile1.getDogName() + " pooed!");
-                walkCheck0.setText("Walked for " + String.valueOf(dProfile1.getWalkDuration()) + " minutes");
-                walkCheck1.setText("Walked for " + String.valueOf(dProfile1.getWalkDuration()) + " minutes");
-                walkedDoneButton.setText("I walked " + dProfile1.getDogName() + "!");
-                mealCheck0.setText("Fed " + String.valueOf(dProfile1.getCalPerMeal()) + " k/cal of food");
-                mealCheck1.setText("Fed " + String.valueOf(dProfile1.getCalPerMeal()) + " k/cal of food");
-                mealDoneButton.setText("I fed " + dProfile1.getDogName() + "!");
-
+                dogName.setText("Let " + dProfile1.dogName + " go...");
+                Log.d(TAG, "dProfile1: " + dProfile1);
+                peeDoneButton.setText(dProfile1.dogName + " peed!");
+                pooDoneButton.setText(dProfile1.dogName + " pooed!");
+                walkCheck0.setText("Walked for " + String.valueOf(dProfile1.walk0) + " minutes");
+                walkCheck1.setText("Walked for " + String.valueOf(dProfile1.walk1) + " minutes");
+                walkedDoneButton.setText("I walked " + dProfile1.dogName + "!");
+                mealCheck0.setText("Fed " + String.valueOf(dProfile1.meal0) + " k/cal of food");
+                mealCheck1.setText("Fed " + String.valueOf(dProfile1.meal1) + " k/cal of food");
+                mealDoneButton.setText("I fed " + dProfile1.dogName + "!");
+                
                 // [END_EXCLUDE]
             }
 
@@ -209,29 +210,17 @@ public class dogHub extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // Get user information
 
-                        dogProfile dProfile = dataSnapshot.getValue(dogProfile.class);
-                        String uid = dProfile.uid;
-                        String dogName = dProfile.dogName;
-                        int dogAge = dProfile.getDogAge();
-                        int dogWeight = dProfile.getDogWeight();
-                        int dogEnergy = dProfile.getDogEnergy();
-                        int calorieCount = dProfile.getCalorieCount();
-                        int peeHours = dProfile.getPeeHours();
-                        int pooHours = dProfile.getPooHours();
-                        int calPerMeal = dProfile.getCalPerMeal();
-                        int walkDuration = dProfile.getWalkDuration();
-                        int walkCount = dProfile.getWalkCount();
-                        Date lastPeed = dProfile.getLastPeed();
-                        Date lastPooed = dProfile.getLastPooed();
-                        boolean walk0 = dProfile.getWalk0();
-                        boolean walk1 = dProfile.getWalk1();
-                        boolean meal0 = dProfile.getMeal0();
-                        boolean meal1 = dProfile.getMeal1();
-
-                       dProfile1 = new dogProfile(uid, dogName, dogAge, dogWeight, dogEnergy, calorieCount, peeHours,
-                               pooHours, calPerMeal, walkDuration, walkCount, lastPeed, lastPooed, walk0,
-                               walk1, meal0, meal1);
-                        Log.d(TAG, "getDogProfile " + uid + " dogName: " + dogName + " dogWeight: " + dogWeight + " dogEnergy: " + dogEnergy + " cc: " + calorieCount);
+                        dProfile1 = dataSnapshot.getValue(dogProfile.class);
+                        dogName.setText("Let " + dProfile1.dogName + " go...");
+                        Log.d(TAG, "dProfile1: " + dProfile1);
+                        peeDoneButton.setText(dProfile1.dogName + " peed!");
+                        pooDoneButton.setText(dProfile1.dogName + " pooed!");
+                        walkCheck0.setText("Walked for " + String.valueOf(dProfile1.walk0) + " minutes");
+                        walkCheck1.setText("Walked for " + String.valueOf(dProfile1.walk1) + " minutes");
+                        walkedDoneButton.setText("I walked " + dProfile1.dogName + "!");
+                        mealCheck0.setText("Fed " + String.valueOf(dProfile1.meal0) + " k/cal of food");
+                        mealCheck1.setText("Fed " + String.valueOf(dProfile1.meal1) + " k/cal of food");
+                        mealDoneButton.setText("I fed " + dProfile1.dogName + "!");
                     }
 
                     @Override
