@@ -214,9 +214,20 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:id="@+id/button3"
+            android:id="@+id/button4"
             android:onClick="signoutButtonClick"
             android:layout_weight="1" />
+
+        <Button
+            android:text="Share Pet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button3"
+            android:onClick="sharePetProfile"
+            android:layout_weight="1"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="27dp" />
 
 
     </RelativeLayout>

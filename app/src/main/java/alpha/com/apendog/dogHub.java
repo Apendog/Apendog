@@ -149,7 +149,7 @@ public class dogHub extends AppCompatActivity {
                 mealCheck0.setText("Fed " + String.valueOf(dProfile1.meal0) + " k/cal of food");
                 mealCheck1.setText("Fed " + String.valueOf(dProfile1.meal1) + " k/cal of food");
                 mealDoneButton.setText("I fed " + dProfile1.dogName + "!");
-                
+
                 // [END_EXCLUDE]
             }
 
@@ -253,7 +253,13 @@ public class dogHub extends AppCompatActivity {
     }
 
 
-
+    public void sharePetProfile (View view) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, mpetUid);
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
 
     public void signOut() {
         mAuth.signOut();
