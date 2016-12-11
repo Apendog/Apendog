@@ -2,6 +2,7 @@ package alpha.com.apendog;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,8 +19,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,13 +36,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText editTextPassword;
     private Button buttonSignup;
     private Button buttonSignin;
-    private Button buttonSignout;
     private ProgressDialog progressDialog;
-    private TextView mStatusTextView;
-    private TextView mDetailTextView;
-    private boolean hasDogProfile;
-    private String petUid;
-
+    public boolean hasPetProfile;
+    public String userUid;
+    public String petUid;
+    public UserProfile userProfile;
+    public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     private static final String TAG = "Ed Tag";
 
     //defining firebaseauth object
@@ -48,9 +51,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseAuth.AuthStateListener mAuthListener;
     // [END declare_auth_listener]
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,26 +59,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //initializing views
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        mStatusTextView = (TextView) findViewById(R.id.status);
-        mDetailTextView = (TextView) findViewById(R.id.detail);
-
-       // delete this after db pull is working
-        hasDogProfile = getDogProfile();
-
         //initializing firebase auth object
         firebaseAuth = FirebaseAuth.getInstance();
-
-
-
         buttonSignup = (Button) findViewById(R.id.buttonSignup);
         buttonSignin = (Button) findViewById(R.id.buttonSignin);
-        buttonSignout = (Button) findViewById(R.id.buttonSignout);
         progressDialog = new ProgressDialog(this);
-
         //attaching listener to button
         buttonSignup.setOnClickListener(this);
         buttonSignin.setOnClickListener(this);
-        buttonSignout.setOnClickListener(this);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -86,12 +74,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    //If dog profile is built then go to doghub
+                    userUid = getUid();
+                    getDogProfile();
                     String userName = null;
                     String userEmail = editTextEmail.getText().toString();
-                    boolean hasPetProfile = false;
+                    Log.d(TAG, "hasPetProfile: " + hasPetProfile);
 
-                    if (!hasDogProfile) {
+                    if (!hasPetProfile) {
                         writeUserProfile( userName, userEmail, hasPetProfile, petUid, getUid() );
                         Intent intent = new Intent(MainActivity.this, loginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -102,6 +91,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Intent intent = new Intent(MainActivity.this, dogHub.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.putExtra(EXTRA_MESSAGE, petUid);
+                        startActivity(intent);
+                        Log.d("Ed-Log", "AddPet--- Ran" + petUid);
                         startActivity(intent);
 
                     }
@@ -110,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
                 // [START_EXCLUDE]
-                updateUI(user);
+
                 // [END_EXCLUDE]
             }
         };
@@ -118,11 +110,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 //end OnCreate
 
-    public boolean getDogProfile() {
-        boolean value = false;
+    public void getDogProfile() {
+        FirebaseDatabase.getInstance().getReference().child("oProfile").child(userUid)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get user information
+                        userProfile = dataSnapshot.getValue(UserProfile.class);
+                        petUid = userProfile.petUid;
+                        Log.d("Ed-Log", "GetDogProfile Ran" + petUid);
+                        hasPetProfile = userProfile.hasPetProfile;
+                    }
 
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-        return value;
+                    }
+                });
     }
 
     @Override
@@ -157,17 +161,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Toast.makeText(MainActivity.this, R.string.auth_failed,
                                     Toast.LENGTH_SHORT).show();
                         }
-
                         // [START_EXCLUDE]
-
                         hideProgressDialog();
                         // [END_EXCLUDE]
                     }
@@ -189,33 +187,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithEmail:failed", task.getException());
                             Toast.makeText(MainActivity.this, R.string.auth_failed,
                                     Toast.LENGTH_SHORT).show();
                         }
-
                         // [START_EXCLUDE]
-                        if (!task.isSuccessful()) {
-                            mStatusTextView.setText(R.string.auth_failed);
-                        }
                         hideProgressDialog();
                         // [END_EXCLUDE]
                     }
                 });
         // [END sign_in_with_email]
-    }
-
-    private void signOut() {
-        firebaseAuth.signOut();
-        Toast.makeText(MainActivity.this, R.string.auth_failed,
-                Toast.LENGTH_SHORT).show();
-        updateUI(null);
-        Log.d(TAG, "signed out");
     }
 
     private boolean validateForm() {
@@ -240,24 +222,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return valid;
     }
 
-    private void updateUI(FirebaseUser user) {
-        hideProgressDialog();
-        if (user != null) {
-            mStatusTextView.setText(getString(R.string.emailpassword_status_fmt, user.getEmail()));
-            mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
-
-//            findViewById(R.id.email_password_buttons).setVisibility(View.GONE);
-//            findViewById(R.id.email_password_fields).setVisibility(View.GONE);
-            findViewById(R.id.buttonSignout).setVisibility(View.VISIBLE);
-        } else {
-            mStatusTextView.setText(R.string.signed_out);
-            mDetailTextView.setText(null);
-
-//            findViewById(R.id.email_password_buttons).setVisibility(View.VISIBLE);
-//            findViewById(R.id.email_password_fields).setVisibility(View.VISIBLE);
-            findViewById(R.id.buttonSignout).setVisibility(View.GONE);
-        }
-    }
 
     @Override
     public void onClick(View v) {
@@ -266,9 +230,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             createAccount(editTextEmail.getText().toString(), editTextPassword.getText().toString());
         } else if (i == R.id.buttonSignin) {
             signIn(editTextEmail.getText().toString(), editTextPassword.getText().toString());
-        } else if (i == R.id.buttonSignout) {
-            signOut();
-            Log.d(TAG, "signout");
         }
     }
 
@@ -298,18 +259,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      *  Write to the DB
      ***************************************************************/
     private void writeUserProfile(String username, String email, boolean hasPetProfile, String petUid, String uid) {
-        // Create new post at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneousl
-
-//        String key = mDatabase.child("dProfile").push().getKey();
-//        int pCount = mDatabase.child("dProfile/" + uid + "/petCount");
         UserProfile uProfile = new UserProfile(username, email, hasPetProfile, petUid); //this function needs values passed to it.
         Map<String, Object> postValues = uProfile.toMap();
-
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/oProfile/" + uid, postValues);
-
-
         mDatabase.updateChildren(childUpdates);
     }
 

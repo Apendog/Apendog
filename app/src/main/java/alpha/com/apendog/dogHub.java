@@ -140,8 +140,17 @@ public class dogHub extends AppCompatActivity {
                 dProfile1 = dataSnapshot.getValue(dogProfile.class);
 
                 // [START_EXCLUDE]
+                dogName.setText("Let " + dProfile1.dogName + " go...");
+                Log.d(TAG, "dProfile1: " + dProfile1);
+                peeDoneButton.setText(dProfile1.dogName + " peed!");
+                pooDoneButton.setText(dProfile1.dogName + " pooed!");
+                walkCheck0.setText("Walked for " + String.valueOf(dProfile1.walk0) + " minutes");
+                walkCheck1.setText("Walked for " + String.valueOf(dProfile1.walk1) + " minutes");
+                walkedDoneButton.setText("I walked " + dProfile1.dogName + "!");
+                mealCheck0.setText("Fed " + String.valueOf(dProfile1.meal0) + " k/cal of food");
+                mealCheck1.setText("Fed " + String.valueOf(dProfile1.meal1) + " k/cal of food");
+                mealDoneButton.setText("I fed " + dProfile1.dogName + "!");
 
-                
                 // [END_EXCLUDE]
             }
 
@@ -248,6 +257,13 @@ public class dogHub extends AppCompatActivity {
     }
 
 
+    public void sharePetProfile (View view) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, mpetUid);
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
 
     public void walk0Click(View view) {
         mDatabase.child("dProfile").child(mpetUid).child("walk0").setValue(true);

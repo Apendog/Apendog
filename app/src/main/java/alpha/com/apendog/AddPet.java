@@ -36,9 +36,6 @@ public class AddPet extends AppCompatActivity {
         userUid = intent.getStringExtra(AddPet.EXTRA_MESSAGE);
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
-
-
     }
 
     /***************************************************************
