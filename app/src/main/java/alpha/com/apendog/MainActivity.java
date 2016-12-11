@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Log.d(TAG, "hasPetProfile: " + hasPetProfile);
 
                     if (!hasPetProfile) {
-                        writeUserProfile( userName, userEmail, hasPetProfile, petUid, getUid() );
+//                        writeUserProfile( userName, userEmail, hasPetProfile, petUid, getUid() );
                         Intent intent = new Intent(MainActivity.this, loginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -117,9 +117,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // Get user information
                         userProfile = dataSnapshot.getValue(UserProfile.class);
-                        petUid = userProfile.petUid;
+//                        petUid = userProfile.petUid;
                         Log.d("Ed-Log", "GetDogProfile Ran" + petUid);
-                        hasPetProfile = userProfile.hasPetProfile;
+//                        hasPetProfile = userProfile.hasPetProfile;
                     }
 
                     @Override

@@ -50,6 +50,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
     public AlertDialog alertDialog = null;
     public String userUid;
     public String petUid;
+    public UserProfile userProfile;
     public final static String EXTRA_MESSAGE = "PetUId";
     private static final String TAG = "Ed-Log";
     private FirebaseAuth mAuth;
@@ -577,7 +578,37 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
     }
 
 
+    /***************************************************************
+     *  I already have a pet Function
+     ***************************************************************/
+    public void havePet (View view) {
+        FirebaseDatabase.getInstance().getReference().child("oProfile").child(userUid)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get user information
+                        userProfile = dataSnapshot.getValue(UserProfile.class);
+                        petUid = userProfile.petUid;
+                        Log.d("Ed-Log", "GetDogProfile Ran" + petUid);
 
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+        havePetIntent(petUid);
+    }
+    public void havePetIntent(String x) {
+        Intent intent = new Intent(loginActivity.this, dogHub.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra(EXTRA_MESSAGE, x);
+        startActivity(intent);
+        Log.d("Ed-Log", "goToAddPet--- Ran" + x);
+    }
 
     // if monthYearPicker value changes. This runs
     public void onValueChange(NumberPicker np2, int oldVal, int newVal) {
@@ -602,7 +633,7 @@ public class loginActivity extends AppCompatActivity implements NumberPicker.OnV
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra(EXTRA_MESSAGE, userUid);
         startActivity(intent);
-        Log.d("Ed-Log", "goToAddPet--- Ran");
+        Log.d("Ed-Log", "goToAddPet--- Ran" + userUid);
     }
     /***************************************************************
      *  go to dogHub Page

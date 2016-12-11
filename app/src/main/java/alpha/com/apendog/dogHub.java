@@ -223,6 +223,8 @@ public class dogHub extends AppCompatActivity {
                         walkedDoneButton.setText("I walked " + dProfile1.dogName + "!");
                         mealCheck0.setText("Fed " + String.valueOf(dProfile1.meal0) + " k/cal of food");
                         mealCheck1.setText("Fed " + String.valueOf(dProfile1.meal1) + " k/cal of food");
+                        mealCheck0.setChecked(dProfile1.meal0);
+                        mealCheck1.setChecked(dProfile1.meal1);
                         mealDoneButton.setText("I fed " + dProfile1.dogName + "!");
 
                     }
@@ -278,20 +280,27 @@ public class dogHub extends AppCompatActivity {
             mDatabase.child("dProfile").child(mpetUid).child("walk0").setValue(true);
             walkCheck0.setChecked(true);
             Log.d("onWalkClick", "then statement ran");
-        } else {
+        } else if (!dProfile1.walk1){
             mDatabase.child("dProfile").child(mpetUid).child("walk1").setValue(true);
-            walkCheck0.setChecked(true);
+            walkCheck1.setChecked(true);
             Log.d("onWalkClick", "else statement ran");
 
         }
     }
     public void onFeedClick (View view) {
-        if (mDatabase.child("dProfile").child(mpetUid).child("meal0").equals(false)) {
+        if (!dProfile1.meal0) {
             mDatabase.child("dProfile").child(mpetUid).child("meal0").setValue(true);
-        } else {
+            mealCheck0.setChecked(true);
+        } else if (!dProfile1.meal1){
             mDatabase.child("dProfile").child(mpetUid).child("meal1").setValue(true);
+            mealCheck1.setChecked(true);
+        } else {
+            Toast.makeText(dogHub.this,
+                    "FeedClick",
+                    Toast.LENGTH_SHORT).show();
         }
     }
+
 
     public void signOut() {
         mAuth.signOut();
